@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simulado HCIA-Datacom · Prep</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0d1420; --panel:#141d2b; --panel2:#1b2636; --line:#26344a;
+  --line-soft:#22314a;
+  --ink:#eaf0f8; --muted:#8ea1bd; --faint:#5f7391;
+  --muted2:#93a6c2;
+  --signal:#2dd4bf; --signal-deep:#0e8f86; --signal-dim:#123f3f;
+  --ok:#34d399; --ok-bg:#12332a; --bad:#f87171; --bad-bg:#3a1c20;
+  --warn:#fbbf24; --warn-bg:#3a2f12;
+  --radius:14px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:
+    radial-gradient(1200px 600px at 80% -10%, #16283f 0%, transparent 55%),
+    radial-gradient(900px 500px at -10% 110%, #10261f 0%, transparent 50%),
+    var(--bg);
+  color:var(--ink);
+  font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  line-height:1.55; min-height:100vh; -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:760px;margin:0 auto;padding:28px 20px 80px}
+.mono{font-family:'IBM Plex Mono',ui-monospace,monospace}
+h1,h2,h3{font-family:'Space Grotesk',sans-serif;margin:0}
+button{font-family:inherit;cursor:pointer;border:none;border-radius:10px;font-size:15px;font-weight:600;transition:transform .06s ease, background .15s ease, border-color .15s ease}
+button:active{transform:translateY(1px)}
+button:focus-visible{outline:2px solid var(--signal);outline-offset:2px}
+.btn-primary{background:linear-gradient(180deg,#2dd4bf,#12b3a4);color:#04211f;padding:13px 22px}
+.btn-primary:hover{filter:brightness(1.05)}
+.btn-ghost{background:transparent;color:var(--ink);border:1px solid var(--line);padding:11px 18px}
+.btn-ghost:hover{border-color:var(--signal);color:var(--signal)}
+.btn-mini{background:var(--panel2);color:var(--muted2);border:1px solid var(--line);padding:8px 14px;font-size:14px}
+.btn-mini:hover{border-color:var(--signal);color:var(--ink)}
+.hide{display:none!important}
+
+/* HERO / SETUP */
+.eyebrow{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--signal);font-weight:600}
+.hero h1{font-size:34px;line-height:1.08;letter-spacing:-.5px;margin:10px 0 8px;font-weight:700}
+.hero p{color:var(--muted);margin:0 0 4px;max-width:52ch}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:22px}
+.panel + .panel{margin-top:16px}
+.label{font-size:13px;font-weight:600;color:var(--muted2);margin:0 0 10px;letter-spacing:.02em}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{display:inline-flex;align-items:center;gap:7px;background:var(--panel2);border:1px solid var(--line);color:var(--muted2);
+  padding:7px 13px;border-radius:999px;font-size:13.5px;font-weight:500;user-select:none}
+.chip:hover{border-color:var(--line-soft);color:var(--ink)}
+.chip.on{background:var(--signal-dim);border-color:var(--signal-deep);color:#a7f3ec}
+.chip .w{font-family:'IBM Plex Mono',monospace;font-size:11px;opacity:.7}
+.counts{display:flex;gap:10px;flex-wrap:wrap}
+.count-opt{flex:1;min-width:70px;text-align:center;background:var(--panel2);border:1px solid var(--line);color:var(--muted2);
+  padding:12px 6px;border-radius:12px;font-family:'Space Grotesk';font-weight:600;font-size:18px}
+.count-opt small{display:block;font-family:'Inter';font-size:11px;font-weight:500;color:var(--faint);margin-top:2px}
+.count-opt.on{background:var(--signal-dim);border-color:var(--signal-deep);color:#a7f3ec}
+.count-opt.on small{color:#7fd8cf}
+.setup-foot{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-top:22px;flex-wrap:wrap}
+.avail{font-size:13px;color:var(--faint)}
+.avail b{color:var(--muted2)}
+.seg{display:inline-flex;background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:4px;gap:4px}
+.seg-btn{background:transparent;color:var(--muted2);padding:9px 22px;border-radius:7px;font-size:14px;font-weight:600}
+.seg-btn.on{background:var(--signal-dim);color:#a7f3ec}
+.mode-desc{font-size:13px;color:var(--faint);margin:12px 0 0}
+.timer-danger{color:var(--bad)!important;font-weight:700}
+
+/* QUIZ */
+.qbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;font-size:13px;color:var(--muted)}
+.qbar .mono{color:var(--muted2)}
+.track{height:5px;background:var(--panel2);border-radius:999px;overflow:hidden;margin-bottom:22px;border:1px solid var(--line)}
+.fill{height:100%;background:linear-gradient(90deg,var(--signal-deep),var(--signal));width:0;transition:width .3s ease}
+.qtag{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--signal);background:var(--signal-dim);border:1px solid var(--signal-deep);padding:3px 10px;border-radius:6px;margin-bottom:12px}
+.qtext{font-size:19px;font-weight:500;font-family:'Space Grotesk';line-height:1.4;margin:0 0 20px;letter-spacing:-.2px;white-space:pre-wrap}
+.hint{font-size:12.5px;color:var(--faint);margin:-12px 0 16px}
+.opt{display:flex;align-items:flex-start;gap:12px;background:var(--panel2);border:1px solid var(--line);border-radius:12px;
+  padding:14px 16px;margin-bottom:10px;cursor:pointer;transition:border-color .12s,background .12s}
+.opt:hover{border-color:var(--line-soft)}
+.opt.sel{border-color:var(--signal);background:var(--signal-dim)}
+.box{flex:0 0 20px;height:20px;border:2px solid var(--faint);border-radius:6px;margin-top:1px;display:flex;align-items:center;justify-content:center;font-size:12px;color:#04211f}
+.opt[data-multi] .box{border-radius:6px}
+.opt:not([data-multi]) .box{border-radius:50%}
+.opt.sel .box{background:var(--signal);border-color:var(--signal)}
+.opt .otxt{font-size:15px;color:var(--ink)}
+.matchrow{display:flex;align-items:center;gap:14px;background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:12px 16px;margin-bottom:10px}
+.matchrow .ml{flex:0 0 120px;font-weight:600;font-size:15px}
+.matchrow select{flex:1;background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:9px;padding:10px;font-family:inherit;font-size:14px}
+.matchrow select:focus{outline:none;border-color:var(--signal)}
+.nav{display:flex;justify-content:space-between;gap:12px;margin-top:22px}
+
+/* REPORT */
+.score-card{text-align:center;padding:30px 22px}
+.verdict{font-family:'IBM Plex Mono',monospace;font-size:13px;letter-spacing:.14em;text-transform:uppercase;font-weight:600}
+.verdict.pass{color:var(--ok)} .verdict.fail{color:var(--bad)}
+.big{font-family:'Space Grotesk';font-size:60px;font-weight:700;line-height:1;margin:8px 0 2px;letter-spacing:-1px}
+.big small{font-size:26px;color:var(--faint);font-weight:600}
+.subscore{color:var(--muted);font-size:14px}
+.passline{margin:20px auto 0;max-width:420px}
+.passline .track2{height:10px;background:var(--panel2);border:1px solid var(--line);border-radius:999px;position:relative;overflow:hidden}
+.passline .val{height:100%;border-radius:999px}
+.passline .mark{position:absolute;top:-5px;bottom:-5px;width:2px;background:var(--warn);left:60%}
+.passline .cap{display:flex;justify-content:space-between;font-size:11px;color:var(--faint);margin-top:6px;font-family:'IBM Plex Mono',monospace}
+.brk-row{display:flex;align-items:center;gap:12px;margin-bottom:11px}
+.brk-row .bl{flex:0 0 150px;font-size:13.5px;color:var(--muted2)}
+.brk-row .bt{flex:1;height:9px;background:var(--panel2);border:1px solid var(--line);border-radius:999px;overflow:hidden}
+.brk-row .bf{height:100%;border-radius:999px}
+.brk-row .bn{flex:0 0 52px;text-align:right;font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:var(--muted2)}
+.callout{border-radius:12px;padding:14px 16px;font-size:14px;margin-top:4px;border:1px solid}
+.callout.warn{background:var(--warn-bg);border-color:#5a4a1c;color:#fde3a7}
+.callout.good{background:var(--ok-bg);border-color:#1c5a44;color:#bff2df}
+.review h3{font-size:15px;margin:22px 0 12px;color:var(--muted2);font-family:'Space Grotesk'}
+.ritem{border:1px solid var(--line);border-left-width:3px;border-radius:10px;padding:14px 16px;margin-bottom:10px;background:var(--panel)}
+.ritem.ok{border-left-color:var(--ok)} .ritem.no{border-left-color:var(--bad)}
+.ritem .rq{font-size:14.5px;font-weight:500;margin-bottom:8px}
+.ritem .line{font-size:13.5px;margin:3px 0}
+.ritem .k{color:var(--faint)}
+.ritem .yours.no{color:var(--bad)} .ritem .correct{color:var(--ok)}
+.ritem .exp{font-size:13.5px;color:var(--muted);margin-top:9px;padding-top:9px;border-top:1px solid var(--line)}
+.ritem .exp strong{color:var(--ink);font-weight:600}
+.rtag{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);float:right}
+.footer{margin-top:26px;display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+.tiny{text-align:center;color:var(--faint);font-size:12px;margin-top:34px;line-height:1.6}.hist-btn{margin-top:14px;text-align:center}.hist-table{width:100%;border-collapse:collapse;font-size:13px;margin-top:12px}.hist-table th{background:var(--panel2);padding:10px;text-align:left;font-weight:600;color:var(--muted2);border-bottom:1px solid var(--line)}.hist-table td{padding:10px;border-bottom:1px solid var(--line-soft)}.hist-table tr:hover{background:var(--panel2)}.hist-row-score{font-family:"Space Grotesk";font-weight:700}.hist-row-score.pass{color:var(--ok)}.hist-row-score.fail{color:var(--bad)}.hist-stat{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px}.hist-card{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:14px}.hist-card .label{font-size:12px;color:var(--faint);margin-bottom:6px}.hist-card .val{font-family:"Space Grotesk";font-size:24px;font-weight:700;color:var(--signal)}.hist-topic-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--line-soft);font-size:13px}.hist-topic-name{flex:1}.hist-topic-bar{flex:0 0 120px;height:6px;background:var(--panel2);border-radius:999px;margin:0 10px}.hist-topic-bar .fill{height:100%;background:linear-gradient(90deg,#0e8f86,#34d399);border-radius:999px}.hist-topic-pct{flex:0 0 40px;text-align:right;color:var(--muted2);font-weight:600}.clear-btn{background:var(--bad-bg);border:1px solid #5a453a;color:var(--bad);padding:9px 16px;margin-top:10px}.clear-btn:hover{background:#4a3a2a}
+.lesson-list{display:grid;gap:8px;max-height:400px;overflow-y:auto}
+.lesson-item{padding:10px 12px;background:var(--panel2);border:1px solid var(--line);border-radius:8px;cursor:pointer;transition:all 200ms;font-size:13px}
+.lesson-item:hover{background:var(--panel2-hover);border-color:var(--signal-dim)}
+.lesson-item.selected{background:var(--signal-dim);border-color:var(--signal);color:#0a0a0a;font-weight:600}
+.lesson-item .num{font-weight:600;margin-right:6px;color:var(--muted2)}
+.lesson-item.selected .num{color:#0a0a0a}
+.lesson-badge{display:inline-block;background:var(--muted-bg);color:var(--muted2);padding:2px 6px;border-radius:4px;font-size:11px;margin-left:6px}
+
+@media (max-width:520px){
+  .hero h1{font-size:27px} .big{font-size:48px}
+  .brk-row .bl{flex-basis:104px} .matchrow .ml{flex-basis:88px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- SETUP -->
+  <section id="setup">
+    <div class="hero">
+      <span class="eyebrow">HCIA-Datacom · H12-811 · V2.0</span>
+      <h1>Simulado de certificação</h1>
+      <p>Monte um simulado do tamanho que quiser, escolha os temas e receba um relatório com nota, desempenho por domínio e seus pontos fracos. Banco de questões validado, em inglês, como na prova.</p>
+    </div>
+
+    <div class="panel hist-btn">
+      <button class="btn-ghost" id="viewHistory">📊 Historico</button>
+    </div>
+
+    <div class="panel">
+      <p class="label">Modo</p>
+      <div class="seg">
+        <button class="seg-btn on" data-mode="train">Treino</button>
+        <button class="seg-btn" data-mode="exam">Prova real</button>
+        <button class="seg-btn" data-mode="lesson">Por aula</button>
+      </div>
+      <p class="mode-desc" id="modeDesc">Escolha a quantidade e os temas livremente. Correção e explicações no final.</p>
+    </div>
+
+    <div class="panel" id="panelCount">
+      <p class="label">Quantas questões?</p>
+      <div class="counts" id="counts"></div>
+    </div>
+
+    <div class="panel hide" id="panelLesson">
+      <p class="label">Aulas do curso</p>
+      <p style="color:var(--faint);font-size:13px;margin-bottom:12px">Selecione uma aula para treinar só os tópicos daquele módulo.</p>
+      <div class="lesson-list" id="lessonList"></div>
+      <div style="margin-top:12px">
+        <button class="btn-ghost" id="clearLesson">Mostrar tudo</button>
+      </div>
+    </div>
+    <div class="panel" id="panelTopics">
+      <p class="label">Temas <span style="color:var(--faint);font-weight:400">— toque para incluir/excluir. O número é o peso aproximado na prova.</span></p>
+      <div class="chips" id="chips"></div>
+      <div class="setup-foot">
+        <span class="avail" id="avail"></span>
+        <button class="btn-primary" id="start">Iniciar simulado</button>
+      </div>
+    </div>
+
+    <div class="panel hide" id="panelExam">
+      <p class="label">Prova real — simulação</p>
+      <p style="color:var(--muted);font-size:14px;margin:0 0 16px;line-height:1.55">60 questões sorteadas de todos os temas, cronômetro regressivo de 90 minutos, tudo em inglês e sem correção até o final — como no exame oficial. Nota de corte 60%.</p>
+      <div class="setup-foot" style="justify-content:flex-end">
+        <button class="btn-primary" id="startExam">Iniciar prova</button>
+      </div>
+    </div>
+    <p class="tiny">Nota de corte real: 600/1000 (60%) · 60 questões · 90 min.<br>Temas de WLAN, IPv6 e SDN têm menos questões aqui — reforce-os pela documentação oficial da Huawei.</p>
+  </section>
+
+  <!-- QUIZ -->
+  <section id="quiz" class="hide">
+    <div class="qbar">
+      <span><span id="lblQuestion">Questão</span> <span class="mono" id="qpos">1</span> / <span class="mono" id="qtot">10</span></span>
+      <span class="mono" id="timer">00:00</span>
+    </div>
+    <div class="track"><div class="fill" id="fill"></div></div>
+    <div class="panel">
+      <span class="qtag" id="qtag">IP</span>
+      <p class="qtext" id="qtext"></p>
+      <p class="hint hide" id="qhint">Marque todas as corretas.</p>
+      <div id="qopts"></div>
+    </div>
+    <div class="nav">
+      <button class="btn-ghost" id="prev">Voltar</button>
+      <button class="btn-primary" id="next">Próxima</button>
+    </div>
+    <div style="text-align:center;margin-top:14px">
+      <button class="btn-mini" id="finishNow">Finalizar agora</button>
+    </div>
+    <p class="tiny" id="quizNote">Suas respostas são corrigidas só no final. Você pode voltar e revisar antes de finalizar.</p>
+  </section>
+
+  <!-- REPORT -->
+  <section id="report" class="hide"></section>
+
+  <!-- HISTORY -->
+  <section id="history" class="hide">
+    <div class="panel">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <h2 style="margin:0;font-size:22px">Historico</h2>
+        <button class="btn-ghost" id="backFromHistory">Voltar</button>
+      </div>
+    </div>
+    <div class="panel" id="historyStats"></div>
+    <div class="panel" id="historyTable"></div>
+    <div style="text-align:center;margin-top:20px">
+      <button class="clear-btn" id="clearHistory">Limpar tudo</button>
+    </div>
+  </section>
+
+</div>
+
+<script>
+/* ============================ BANCO DE QUESTÕES (validado) ============================ */
+const LESSONS = {"1": "Fundamentos da rede de comunicação de dados", "2": "Modelo de Referência de Rede", "3": "Noções Básicas de VRP da Huawei", "4": "Fundamentos de comutação de Ethernet", "5": "Princípios e configuração da VLAN", "6": "Princípios e configuração do STP", "7": "Eth-Trunk iStack e CSS", "8": "Protocolos da camada de rede e endereçamento de IP", "9": "Fundamentos de roteamento IP", "10": "Conceitos básicos do OSPF", "11": "Conceitos básicos de IPv6", "12": "Comunicação entre VLANs", "13": "Visão geral da WLAN", "14": "Princípios e configuração de ACL", "15": "Princípios e configuração da AAA", "16": "Tradução de endereço de rede", "17": "Serviços e aplicativos de rede", "18": "Tecnologias de WAN", "19": "Gerenciamento de rede e O&M", "20": "Visão geral de SDN e NFV", "21": "Automação e programabilidade de rede"};
+const LESSON_MAP = {"fund": [1, 2, 3, 4, 8], "eth": [4, 5, 6, 7, 12], "ip": [8, 9, 10, 11, 12, 16, 18], "ipv6": [11], "wlan": [13], "sec": [14, 15, 16], "svc": [17, 19], "wan": [18], "mgmt": [19], "sdn": [20, 21]};
+const TOPICS = {
+  fund:{n:'Fundamentos',w:8}, ip:{n:'IP / Roteamento',w:25}, eth:{n:'Ethernet / Switching',w:20},
+  svc:{n:'Serviços de rede',w:6}, sec:{n:'Segurança',w:8}, wlan:{n:'WLAN',w:10},
+  wan:{n:'WAN',w:4}, ipv6:{n:'IPv6',w:6}, mgmt:{n:'Gerência / VRP',w:7}, sdn:{n:'SDN / Automação',w:6}
+};
+// type: 'single' (answer=index) | 'multi' (answer=[indices]) | 'tf' (answer=index) | 'match'
+const BANK = [{"t":"fund","type":"single","q":"Which layer of the OSI model does a traditional Layer 2 switch operate at?","e":"Um switch tradicional opera na <strong>camada de enlace</strong>, encaminhando quadros pelo endereço MAC.","o":["Network layer","Data link layer","Physical layer","Transport layer"],"a":1,"id":0,"lesson":1},{"t":"fund","type":"single","q":"How many layers does the OSI reference model have?","e":"O modelo OSI tem <strong>7 camadas</strong>: física, enlace, rede, transporte, sessão, apresentação e aplicação.","o":["4","5","7","8"],"a":2,"id":1,"lesson":1},{"t":"fund","type":"single","q":"How many layers does the TCP/IP (standard) model have?","e":"O modelo TCP/IP padrão tem <strong>4 camadas</strong>: acesso à rede, Internet, transporte e aplicação.","o":["3","4","5","7"],"a":1,"id":2,"lesson":1},{"t":"fund","type":"tf","q":"If the transport layer protocol is UDP, the IP header Protocol field carries the value 6.","e":"Falso. No campo Protocol do IP: <strong>UDP = 17</strong>, TCP = 6. (ICMP=1, OSPF=89.)","a":1,"id":3,"lesson":1},{"t":"fund","type":"single","q":"In the OSI model, which layer handles end-to-end error checking and flow control?","e":"A camada de <strong>Transporte</strong> cuida da comunicação fim a fim, controle de fluxo e erros fim a fim.","o":["Physical Layer","Data Link Layer","Network Layer","Transport Layer"],"a":3,"id":4,"lesson":1},{"t":"fund","type":"single","q":"Which layer of the OSI model is responsible for logical addressing and routing?","e":"A camada de <strong>Rede</strong> trata do endereçamento lógico (IP) e do roteamento entre redes.","o":["Physical","Data Link","Network","Transport"],"a":2,"id":5,"lesson":1},{"t":"fund","type":"tf","q":"When a router forwards a datagram, the data link layer header is re-encapsulated at every hop.","e":"Verdadeiro. O cabeçalho IP se mantém fim a fim, mas o <strong>quadro de enlace é reencapsulado a cada salto</strong>.","a":0,"id":6,"lesson":1},{"t":"fund","type":"multi","q":"Into which types can ICMP messages be classified? (Choose all that apply)","e":"ICMP divide-se em <strong>mensagens de erro</strong> (ex.: Destination Unreachable) e <strong>de consulta</strong> (ex.: Echo do ping).","o":["Transport messages","Error-reporting messages","Query messages","Application messages"],"a":[1,2],"id":7,"lesson":1},{"t":"fund","type":"single","q":"Which access method does a shared-media Ethernet (hub) network use before sending data?","e":"Em meio compartilhado a Ethernet usa <strong>CSMA/CD</strong> (escuta a portadora e detecta colisão).","o":["CSMA/CD","Token passing","TDMA","CSMA/CA"],"a":0,"id":8,"lesson":1},{"t":"fund","type":"single","q":"Two 100 Mbps stations connect, one half duplex and one full duplex. What happens?","e":"Duplex mismatch: há comunicação básica, mas sob carga surgem colisões e <strong>perda de pacotes</strong>.","o":["They cannot communicate","They communicate, but data may be lost under heavy traffic","They operate normally","Only the full-duplex side transmits"],"a":1,"id":9,"lesson":1},{"t":"fund","type":"single","q":"What is the correct order of the TCP three-way handshake?","e":"A ordem é <strong>SYN -> SYN-ACK -> ACK</strong>, estabelecendo a conexão antes da troca de dados.","o":["SYN, ACK, SYN","SYN, SYN-ACK, ACK","ACK, SYN, SYN-ACK","SYN-ACK, SYN, ACK"],"a":1,"id":10,"lesson":1},{"t":"fund","type":"single","q":"What is the length of a MAC address?","e":"O endereço MAC tem <strong>48 bits</strong> (6 bytes), normalmente escrito em hexadecimal.","o":["32 bits","48 bits","64 bits","128 bits"],"a":1,"id":11,"lesson":1},{"t":"fund","type":"single","q":"What does ARP resolve?","e":"O <strong>ARP</strong> resolve um endereço IP conhecido no endereço MAC correspondente, dentro do mesmo domínio de broadcast.","o":["MAC to IP","IP to MAC","Name to IP","IP to port"],"a":1,"id":12,"lesson":1},{"t":"fund","type":"single","q":"Which transport protocol is connectionless and does not guarantee delivery?","e":"O <strong>UDP</strong> é sem conexão e não garante entrega; é rápido e usado em voz, vídeo e DNS.","o":["TCP","UDP","IP","ARP"],"a":1,"id":13,"lesson":1},{"t":"fund","type":"tf","q":"TCP is a connection-oriented protocol that provides reliable data transfer.","e":"Verdadeiro. O TCP é orientado a conexão e garante confiabilidade com números de sequência, ACKs e retransmissão.","a":0,"id":14,"lesson":1},{"t":"fund","type":"single","q":"Which IP header field is decremented at each hop to prevent packets from looping forever?","e":"O <strong>TTL</strong> é decrementado a cada salto; ao chegar a 0, o pacote é descartado (evita loops infinitos).","o":["TTL","Protocol","Checksum","Flags"],"a":0,"id":15,"lesson":1},{"t":"fund","type":"multi","q":"Which of the following are transport layer protocols? (Choose all that apply)","e":"<strong>TCP e UDP</strong> são de transporte. IP é da camada de rede e ICMP também atua na camada de rede.","o":["TCP","UDP","IP","ICMP"],"a":[0,1],"id":16,"lesson":1},{"t":"fund","type":"single","q":"What is the name of the data unit (PDU) at the data link layer?","e":"Na camada de enlace a PDU é o <strong>quadro (frame)</strong>. Rede = pacote; transporte = segmento; física = bit.","o":["Bit","Frame","Packet","Segment"],"a":1,"id":17,"lesson":1},{"t":"ip","type":"single","q":"A host is configured with 192.168.10.77/26. What is its subnet network address?","e":"/26 = 255.255.255.192, blocos de 64. O .77 cai em 64-127, logo rede = <strong>192.168.10.64</strong>.","o":["192.168.10.0","192.168.10.64","192.168.10.32","192.168.10.128"],"a":1,"id":18,"lesson":8},{"t":"ip","type":"single","q":"A Class C block is split so the largest subnet needs 26 hosts, each subnet separate. Which mask fits?","e":"/27 (<strong>255.255.255.224</strong>) dá 30 hosts (cabe 26) e 8 sub-redes. /28 daria 14 hosts.","o":["255.255.255.224","255.255.255.128","255.255.255.0","255.255.255.192"],"a":0,"id":19,"lesson":8},{"t":"ip","type":"single","q":"When several routes match a destination, which rule decides the route used?","e":"A regra número um é o <strong>longest prefix match</strong> (rota mais específica); preferência/métrica só desempatam.","o":["Lowest metric","Highest protocol preference","Longest prefix match","Route learned first"],"a":2,"id":20,"lesson":8},{"t":"ip","type":"single","q":"What is the default preference (priority) of a static route on the Huawei VRP?","e":"Rota estática padrao = <strong>60</strong>. (Direct 0, OSPF 10, IS-IS 15, Static 60, RIP 100, BGP 255.)","o":["0","10","60","100"],"a":2,"id":21,"lesson":8},{"t":"ip","type":"single","q":"What is the default preference of an OSPF (intra/inter-area) route on the VRP?","e":"OSPF interno = <strong>10</strong> na VRP. OSPF External (ASE) = 150.","o":["0","10","60","150"],"a":1,"id":22,"lesson":8},{"t":"ip","type":"single","q":"What is the default preference of a RIP route on the VRP?","e":"RIP = <strong>100</strong> na VRP; por isso rotas OSPF (10) e estáticas (60) são preferidas sobre RIP.","o":["10","60","100","255"],"a":2,"id":23,"lesson":8},{"t":"ip","type":"single","q":"What is the preference of a directly connected (Direct) route on the VRP?","e":"Rotas diretas têm preferência <strong>0</strong> - as mais confiáveis, pois a rede está conectada localmente.","o":["0","10","60","255"],"a":0,"id":24,"lesson":8},{"t":"ip","type":"multi","q":"Which network types does OSPF support? (Choose all that apply)","e":"OSPF suporta os <strong>quatro</strong>: Point-to-point, Broadcast, NBMA e Point-to-multipoint. DR/BDR só em Broadcast/NBMA.","o":["Point-to-point","Broadcast","NBMA","Point-to-multipoint"],"a":[0,1,2,3],"id":25,"lesson":8},{"t":"ip","type":"single","q":"Which parameter decides the master/slave role during OSPF DD exchange?","e":"O <strong>Router ID</strong> mais alto vira master na troca de pacotes DD (Database Description).","o":["Router Priority","Router ID","Interface cost","Process ID"],"a":1,"id":26,"lesson":8},{"t":"ip","type":"single","q":"Which OSPF packet acknowledges a received LSU (Link State Update)?","e":"O <strong>LSAck</strong> confirma o recebimento de um LSU, garantindo confiabilidade na inundação de LSAs.","o":["Hello","DD","LSR","LSAck"],"a":3,"id":27,"lesson":8},{"t":"ip","type":"single","q":"Which OSPF packet type is used to discover and maintain neighbors?","e":"O pacote <strong>Hello</strong> descobre e mantém vizinhos e negocia parâmetros de adjacência.","o":["Hello","DD","LSR","LSU"],"a":0,"id":28,"lesson":8},{"t":"ip","type":"single","q":"On which OSPF network types is a DR/BDR election performed?","e":"DR/BDR são eleitos em redes <strong>Broadcast e NBMA</strong>, reduzindo o número de adjacências.","o":["Point-to-point and P2MP","Broadcast and NBMA","All network types","Only NBMA"],"a":1,"id":29,"lesson":8},{"t":"ip","type":"single","q":"Which area number is the OSPF backbone area?","e":"A <strong>Area 0</strong> (0.0.0.0) é o backbone; todas as outras áreas devem se conectar a ela.","o":["Area 0","Area 1","Area 255","Area 100"],"a":0,"id":30,"lesson":8},{"t":"ip","type":"single","q":"What metric does OSPF use to select the best path?","e":"O OSPF usa <strong>custo (cost)</strong>, inversamente proporcional à largura de banda do enlace.","o":["Hop count","Cost (based on bandwidth)","Delay","MTU"],"a":1,"id":31,"lesson":8},{"t":"ip","type":"single","q":"What is the maximum hop count that RIP allows before a route is unreachable?","e":"No RIP, <strong>15</strong> é o máximo utilizável; 16 significa inalcançável (limita o tamanho da rede).","o":["15","16","64","255"],"a":0,"id":32,"lesson":8},{"t":"ip","type":"tf","q":"RIP is a link-state routing protocol.","e":"Falso. O RIP é <strong>distance-vector</strong> (vetor de distância), usando contagem de saltos. OSPF é que é link-state.","a":1,"id":33,"lesson":8},{"t":"ip","type":"tf","q":"OSPF is a link-state routing protocol.","e":"Verdadeiro. O OSPF é <strong>link-state</strong>: cada roteador constrói um LSDB e calcula rotas com o algoritmo SPF (Dijkstra).","a":0,"id":34,"lesson":8},{"t":"ip","type":"single","q":"What destination/mask represents a default route?","e":"A rota padrao e <strong>0.0.0.0/0</strong> - casa com qualquer destino quando nao ha rota mais especifica.","o":["255.255.255.255/32","0.0.0.0/0","127.0.0.1/8","192.168.0.0/16"],"a":1,"id":35,"lesson":8},{"t":"ip","type":"tf","q":"The broadcast address of a subnet can be assigned to a host as its IP address.","e":"Falso. Os endereços de <strong>rede</strong> (host bits 0) e de <strong>broadcast</strong> (host bits 1) são reservados.","a":1,"id":36,"lesson":8},{"t":"ip","type":"match","q":"Match each route source to its default preference on the Huawei VRP.","e":"Preferência (menor = mais confiável): <strong>Direct 0, OSPF 10, Static 60, RIP 100</strong>.","left":["Direct","OSPF","Static","RIP"],"right":["0","10","60","100"],"a":["0","10","60","100"],"id":37,"lesson":8},{"t":"ip","type":"single","q":"Which command displays only static routes in the routing table on the VRP?","e":"<strong>display ip routing-table protocol static</strong> filtra a tabela mostrando só rotas estáticas.","o":["display ip routing-table","display ip routing-table protocol static","display current-configuration","display static-route"],"a":1,"id":38,"lesson":8},{"t":"ip","type":"single","q":"How many usable host addresses does a /30 subnet provide?","e":"/30 = 4 endereços, menos rede e broadcast = <strong>2 hosts úteis</strong>. Típico de enlaces ponto a ponto.","o":["1","2","4","6"],"a":1,"id":39,"lesson":8},{"t":"ip","type":"single","q":"How many bits long is an IPv4 address?","e":"Um endereço IPv4 tem <strong>32 bits</strong>, escrito em quatro octetos decimais.","o":["16","32","48","64"],"a":1,"id":40,"lesson":8},{"t":"ip","type":"single","q":"To which class does the address 172.16.0.5 belong?","e":"172 está na faixa 128-191, portanto é <strong>Classe B</strong>.","o":["Class A","Class B","Class C","Class D"],"a":1,"id":41,"lesson":8},{"t":"ip","type":"single","q":"Which of the following is a private IPv4 address range?","e":"<strong>192.168.0.0/16</strong> é privado (RFC 1918), junto de 10.0.0.0/8 e 172.16.0.0/12.","o":["172.32.0.0/16","192.168.0.0/16","8.8.8.0/24","100.0.0.0/8"],"a":1,"id":42,"lesson":8},{"t":"ip","type":"single","q":"How many usable host addresses does a /24 network provide?","e":"/24 = 256 endereços, menos rede e broadcast = <strong>254 hosts úteis</strong>.","o":["253","254","255","256"],"a":1,"id":43,"lesson":8},{"t":"ip","type":"single","q":"What is the broadcast address of 192.168.1.0/24?","e":"Com todos os bits de host em 1, o broadcast de 192.168.1.0/24 é <strong>192.168.1.255</strong>.","o":["192.168.1.0","192.168.1.1","192.168.1.254","192.168.1.255"],"a":3,"id":44,"lesson":8},{"t":"ip","type":"single","q":"What is the default OSPF Hello interval on a broadcast network?","e":"O intervalo Hello padrao em rede broadcast e <strong>10 segundos</strong> (e o Dead e 40s).","o":["10 seconds","30 seconds","40 seconds","120 seconds"],"a":0,"id":45,"lesson":8},{"t":"ip","type":"single","q":"What is the default OSPF Dead interval on a broadcast network?","e":"O Dead interval padrao e <strong>40 segundos</strong> (4x o Hello de 10s).","o":["10 seconds","20 seconds","40 seconds","120 seconds"],"a":2,"id":46,"lesson":8},{"t":"ip","type":"single","q":"In the VRP, a lower route preference value means the route is:","e":"Preferência menor = rota <strong>mais confiável/preferida</strong>. Por isso Direct (0) vence OSPF (10) etc.","o":["Less preferred","More preferred","Ignored","Randomly chosen"],"a":1,"id":47,"lesson":8},{"t":"ip","type":"multi","q":"Which parameters can be specified when configuring a static route? (Choose all that apply)","e":"Uma rota estática precisa da <strong>rede de destino, máscara</strong> e do <strong>next-hop</strong> ou interface de saída.","o":["Destination network and mask","Next-hop IP address","Outbound interface","Destination MAC address"],"a":[0,1,2],"id":48,"lesson":8},{"t":"ip","type":"single","q":"A floating static route is created by giving the backup route a:","e":"A rota flutuante recebe uma <strong>preferência maior</strong> (menos confiável) para servir de backup.","o":["Lower preference value","Higher preference value","Lower metric","Higher bandwidth"],"a":1,"id":49,"lesson":8},{"t":"ip","type":"single","q":"What does VLSM allow?","e":"O <strong>VLSM</strong> permite usar máscaras de tamanhos diferentes na mesma rede, economizando endereços.","o":["Only one mask per network","Variable-length subnet masks","Classful addressing only","Routing without masks"],"a":1,"id":50,"lesson":8},{"t":"ip","type":"single","q":"When a packet TTL reaches 0, the router:","e":"O roteador <strong>descarta o pacote</strong> e pode enviar um ICMP Time Exceeded à origem.","o":["Forwards it anyway","Discards it and may send ICMP Time Exceeded","Buffers it","Broadcasts it"],"a":1,"id":51,"lesson":8},{"t":"ip","type":"single","q":"What is the IP protocol field value for OSPF?","e":"O OSPF usa o número de protocolo <strong>89</strong> no campo Protocol do IP.","o":["6","17","89","1"],"a":2,"id":52,"lesson":8},{"t":"eth","type":"single","q":"What is the default bridge priority when STP is enabled on a Huawei switch?","e":"A prioridade de bridge padrao e <strong>32768</strong>, sempre múltiplo de 4096 (IEEE 802.1D).","o":["8192","16384","32768","4096"],"a":2,"id":53,"lesson":4},{"t":"eth","type":"single","q":"In RSTP, which port role backs up the Root Port and can quickly take over if it fails?","e":"A <strong>Alternate port</strong> é o backup da Root Port. A Backup port faz backup da Designated port.","o":["Designated port","Backup port","Alternate port","Edge port"],"a":2,"id":54,"lesson":4},{"t":"eth","type":"tf","q":"In RSTP, an edge port can go straight to the Forwarding state without the forwarding delay.","e":"Verdadeiro. A <strong>edge port</strong> (ligada a host) vai direto para Forwarding; se receber BPDU, perde esse status.","a":0,"id":55,"lesson":4},{"t":"eth","type":"single","q":"For single-arm (router-on-a-stick) inter-VLAN routing, what is configured on the router?","e":"Cria-se <strong>uma subinterface por VLAN</strong> com dot1q num único link físico; a porta do switch fica em Trunk.","o":["One physical interface per VLAN","A sub-interface per VLAN with 802.1Q","STP on the router","An access port per VLAN"],"a":1,"id":56,"lesson":4},{"t":"eth","type":"multi","q":"Which statements about a Trunk port on a Huawei switch are correct? (Choose all that apply)","e":"A trunk carrega varias VLANs, envia a <strong>PVID sem tag</strong> e liga switch-switch ou switch-roteador.","o":["Carries traffic for multiple VLANs","Adds a tag to PVID frames when sending","Sends PVID frames untagged","Connects switches or switch-to-router"],"a":[0,2,3],"id":57,"lesson":4},{"t":"eth","type":"single","q":"Which technology binds MAC addresses to a specific interface on a switch?","e":"O <strong>Port security</strong> vincula MACs a uma porta e limita quais dispositivos podem se conectar.","o":["Link aggregation","Port security","MAC spoofing","VLAN pruning"],"a":1,"id":58,"lesson":4},{"t":"eth","type":"multi","q":"Which are advantages of switch stacking/clustering (iStack/CSS)? (Choose all that apply)","e":"Empilhamento une switches num <strong>único dispositivo lógico</strong>, aumenta portas/capacidade e a confiabilidade.","o":["Managed as one logical device","Higher capacity and more ports","Improved reliability (redundancy)","Eliminates the need for IP addressing"],"a":[0,1,2],"id":59,"lesson":4},{"t":"eth","type":"single","q":"How does a switch build its MAC address table?","e":"O switch aprende o <strong>MAC de origem</strong> dos quadros que chegam, associando-o à porta de entrada.","o":["By flooding ARP","By learning the source MAC of incoming frames","From a DHCP server","By reading the destination MAC"],"a":1,"id":60,"lesson":4},{"t":"eth","type":"single","q":"What is the default VLAN to which all Huawei switch ports initially belong?","e":"Por padrao todas as portas ficam na <strong>VLAN 1</strong> (default VLAN / PVID padrao).","o":["VLAN 0","VLAN 1","VLAN 100","VLAN 4095"],"a":1,"id":61,"lesson":4},{"t":"eth","type":"single","q":"What is the main purpose of link aggregation (Eth-Trunk)?","e":"O <strong>Eth-Trunk</strong> agrupa vários links físicos num só lógico: mais banda e redundância.","o":["To encrypt frames","To increase bandwidth and provide redundancy","To assign IP addresses","To replace STP"],"a":1,"id":62,"lesson":4},{"t":"eth","type":"single","q":"What is the size of an 802.1Q VLAN tag added to an Ethernet frame?","e":"A tag 802.1Q tem <strong>4 bytes</strong>, inserida entre o endereço de origem e o campo de tipo do quadro.","o":["2 bytes","4 bytes","8 bytes","12 bytes"],"a":1,"id":63,"lesson":4},{"t":"eth","type":"single","q":"What is the range of usable VLAN IDs?","e":"IDs úteis vão de <strong>1 a 4094</strong> (o campo VID tem 12 bits; 0 e 4095 são reservados).","o":["0 to 4095","1 to 4094","1 to 4096","1 to 1024"],"a":1,"id":64,"lesson":4},{"t":"eth","type":"single","q":"How is the STP root bridge selected?","e":"Ganha a bridge de <strong>menor Bridge ID</strong> (prioridade + MAC). Menor prioridade, e em empate menor MAC.","o":["Highest MAC address","Lowest Bridge ID (priority + MAC)","Highest priority value","First one powered on"],"a":1,"id":65,"lesson":4},{"t":"eth","type":"single","q":"How many port states does RSTP define?","e":"O RSTP tem <strong>3 estados</strong>: Discarding, Learning e Forwarding (o STP clássico tinha 5).","o":["2","3","4","5"],"a":1,"id":66,"lesson":4},{"t":"eth","type":"single","q":"What is the default STP forward delay timer?","e":"O forward delay padrao e <strong>15 segundos</strong> (usado nos estados Listening e Learning do STP).","o":["2 seconds","15 seconds","20 seconds","30 seconds"],"a":1,"id":67,"lesson":4},{"t":"eth","type":"single","q":"Which devices exchange BPDUs?","e":"As <strong>BPDUs</strong> são trocadas entre switches para eleger a root bridge e construir a topologia STP.","o":["Hosts","Switches","Routers only","Access points"],"a":1,"id":68,"lesson":4},{"t":"eth","type":"single","q":"On a Trunk port, frames belonging to the PVID are sent:","e":"Os quadros da <strong>PVID saem sem tag (untagged)</strong>; as demais VLANs permitidas saem com tag.","o":["Tagged","Untagged","Dropped","Duplicated"],"a":1,"id":69,"lesson":4},{"t":"eth","type":"tf","q":"STP is used to prevent Layer 2 loops in a switched network.","e":"Verdadeiro. O <strong>STP</strong> bloqueia caminhos redundantes para evitar loops (e tempestades de broadcast).","a":0,"id":70,"lesson":4},{"t":"eth","type":"single","q":"What is the primary benefit of dividing a network into VLANs?","e":"VLANs <strong>isolam domínios de broadcast</strong>, melhorando desempenho, segurança e organização.","o":["More collisions","Isolate broadcast domains","Encrypt traffic","Automatic routing"],"a":1,"id":71,"lesson":4},{"t":"eth","type":"single","q":"What device is required to route traffic between different VLANs?","e":"Roteamento entre VLANs exige um <strong>dispositivo de camada 3</strong> (roteador ou switch L3).","o":["A hub","A Layer 2 switch","A Layer 3 device","A repeater"],"a":2,"id":72,"lesson":4},{"t":"eth","type":"single","q":"Which IEEE standard defines RSTP?","e":"O RSTP é definido pelo <strong>IEEE 802.1w</strong>. STP = 802.1D, MSTP = 802.1s, VLAN tag = 802.1Q.","o":["802.1D","802.1w","802.1s","802.1Q"],"a":1,"id":73,"lesson":4},{"t":"eth","type":"single","q":"The Ethernet address FF-FF-FF-FF-FF-FF is a:","e":"É o endereço de <strong>broadcast</strong> de camada 2 - alcança todos os dispositivos do segmento.","o":["Unicast address","Multicast address","Broadcast address","Reserved address"],"a":2,"id":74,"lesson":4},{"t":"eth","type":"single","q":"When a switch receives a frame with an unknown destination MAC, it:","e":"O switch <strong>inunda</strong> o quadro por todas as portas exceto a de entrada (flooding).","o":["Drops the frame","Floods it out all ports except the incoming one","Sends it to the gateway","Buffers it indefinitely"],"a":1,"id":75,"lesson":4},{"t":"eth","type":"single","q":"On a Layer 3 switch, which logical interface is used as the gateway for a VLAN?","e":"A interface <strong>VLANIF</strong> funciona como gateway L3 daquela VLAN no switch de camada 3.","o":["Loopback","VLANIF","Tunnel","Null0"],"a":1,"id":76,"lesson":4},{"t":"eth","type":"single","q":"Which link aggregation mode uses LACP to negotiate the bundle?","e":"O modo <strong>LACP (dinâmico)</strong> negocia o Eth-Trunk automaticamente; o outro modo é o manual.","o":["Manual load-balancing / LACP","Static VLAN","Trunk-only","Access mode"],"a":0,"id":77,"lesson":4},{"t":"eth","type":"tf","q":"An access port carries traffic for multiple VLANs simultaneously.","e":"Falso. Uma <strong>access port</strong> pertence a uma única VLAN e envia/recebe quadros sem tag.","a":1,"id":78,"lesson":4},{"t":"eth","type":"single","q":"Each port of a switch is its own:","e":"Cada porta de um switch é um <strong>domínio de colisão</strong> separado (por isso não há colisões em full duplex).","o":["Broadcast domain","Collision domain","VLAN","Subnet"],"a":1,"id":79,"lesson":4},{"t":"eth","type":"single","q":"A hybrid port on a Huawei switch can:","e":"A porta <strong>hybrid</strong> pode enviar quadros com e sem tag para várias VLANs - mais flexível que access/trunk.","o":["Only carry one VLAN","Send tagged and untagged frames for multiple VLANs","Only connect to routers","Never be tagged"],"a":1,"id":80,"lesson":4},{"t":"eth","type":"single","q":"Which VLAN assignment method is the most common and is based on the switch port?","e":"A atribuição <strong>por porta (port-based)</strong> é o método mais comum: a VLAN é definida pela porta de acesso.","o":["MAC-based","Port-based","Protocol-based","IP subnet-based"],"a":1,"id":81,"lesson":4},{"t":"svc","type":"tf","q":"A DHCP client obtains its address via a four-step process: DISCOVER, OFFER, REQUEST, ACK.","e":"Verdadeiro. É o processo <strong>DORA</strong>: Discover, Offer, Request, Ack.","a":0,"id":82,"lesson":17},{"t":"svc","type":"single","q":"Which message does a DHCP client send first to locate servers?","e":"O cliente inicia com um <strong>DHCP DISCOVER</strong> em broadcast para descobrir servidores.","o":["DHCP OFFER","DHCP DISCOVER","DHCP REQUEST","DHCP ACK"],"a":1,"id":83,"lesson":17},{"t":"svc","type":"single","q":"What is the main function of DNS?","e":"O <strong>DNS</strong> resolve nomes de domínio (ex.: huawei.com) em endereços IP.","o":["Assign IP addresses","Resolve domain names into IP addresses","Encrypt web traffic","Route packets"],"a":1,"id":84,"lesson":17},{"t":"svc","type":"single","q":"What is the default DHCP lease time on a Huawei server?","e":"O lease padrao no VRP e de <strong>1 dia (24 horas)</strong>.","o":["1 hour","8 hours","1 day","7 days"],"a":2,"id":85,"lesson":17},{"t":"svc","type":"single","q":"Which UDP port does a DHCP server listen on?","e":"O servidor DHCP escuta na <strong>porta 67</strong> (o cliente usa a 68).","o":["53","67","68","80"],"a":1,"id":86,"lesson":17},{"t":"svc","type":"single","q":"Which port does DNS primarily use?","e":"O <strong>DNS</strong> usa a porta <strong>53</strong> (UDP para consultas, TCP para transferência de zona).","o":["25","53","80","110"],"a":1,"id":87,"lesson":17},{"t":"svc","type":"single","q":"Which ports does FTP use for control and data?","e":"O <strong>FTP</strong> usa a porta 21 (controle) e a 20 (dados) no modo ativo.","o":["20 and 21","22","23","25"],"a":0,"id":88,"lesson":17},{"t":"svc","type":"single","q":"Which port does Telnet use?","e":"O <strong>Telnet</strong> usa a porta <strong>23</strong> (e transmite em texto claro - inseguro).","o":["21","22","23","25"],"a":2,"id":89,"lesson":17},{"t":"svc","type":"single","q":"Which port does SSH use?","e":"O <strong>SSH</strong> usa a porta <strong>22</strong> e criptografa a sessão de gerência remota.","o":["22","23","25","443"],"a":0,"id":90,"lesson":17},{"t":"svc","type":"single","q":"Which port does HTTP use?","e":"O <strong>HTTP</strong> usa a porta <strong>80</strong>; o HTTPS usa a 443.","o":["21","25","80","443"],"a":2,"id":91,"lesson":17},{"t":"svc","type":"multi","q":"Which parameters can a DHCP server assign to a client? (Choose all that apply)","e":"O DHCP pode fornecer <strong>IP, máscara/gateway e servidor DNS</strong> - não configura portas de switch.","o":["IP address","Default gateway and mask","DNS server","Switch port number"],"a":[0,1,2],"id":92,"lesson":17},{"t":"svc","type":"single","q":"Compared with FTP, TFTP is:","e":"O <strong>TFTP</strong> usa UDP, é mais simples e sem autenticação; útil para transferências rápidas de arquivos.","o":["More secure than FTP","Simpler, uses UDP, no authentication","Encrypted by default","Only for web pages"],"a":1,"id":93,"lesson":17},{"t":"sec","type":"single","q":"A Basic ACL (2000-2999) on Huawei devices filters traffic based on what?","e":"A <strong>Basic ACL</strong> filtra apenas pela <strong>IP de origem</strong>. A Advanced ACL usa origem/destino, portas e protocolo.","o":["Source IP only","Source/destination IP, ports, protocol","MAC addresses","VLAN IDs"],"a":0,"id":94,"lesson":14},{"t":"sec","type":"single","q":"What is the number range of a Basic ACL on Huawei devices?","e":"A Basic ACL usa a faixa <strong>2000-2999</strong>. Advanced ACL: 3000-3999.","o":["2000-2999","3000-3999","4000-4999","1-99"],"a":0,"id":95,"lesson":14},{"t":"sec","type":"single","q":"What is the number range of an Advanced ACL?","e":"A Advanced ACL usa a faixa <strong>3000-3999</strong> e filtra por origem/destino, portas e protocolo.","o":["2000-2999","3000-3999","4000-4999","6000-6999"],"a":1,"id":96,"lesson":14},{"t":"sec","type":"single","q":"What does AAA stand for?","e":"AAA = <strong>Authentication, Authorization, Accounting</strong> (autenticação, autorização e auditoria).","o":["Access, Auth, Audit","Authentication, Authorization, Accounting","Address, Area, Access","Auth, Access, Account"],"a":1,"id":97,"lesson":14},{"t":"sec","type":"single","q":"What is the primary purpose of NAT?","e":"O <strong>NAT</strong> traduz endereços privados em públicos, dando acesso à Internet e economizando IPv4.","o":["Encrypt traffic","Translate private to public IP and conserve IPv4","Speed up routing","Assign VLANs"],"a":1,"id":98,"lesson":14},{"t":"sec","type":"single","q":"Which NAT type maps many private hosts to one public IP using ports?","e":"O <strong>NAPT/PAT</strong> mapeia vários hosts privados a um IP público diferenciando por porta.","o":["Static NAT","NAPT (PAT)","Basic NAT","No-PAT"],"a":1,"id":99,"lesson":14},{"t":"sec","type":"tf","q":"Telnet transmits data, including passwords, in clear text.","e":"Verdadeiro. Por isso o <strong>SSH</strong> é preferido: o Telnet não criptografa nada.","a":0,"id":100,"lesson":14},{"t":"sec","type":"single","q":"Which protocol provides encrypted remote CLI access to a device?","e":"O <strong>SSH</strong> criptografa a sessão de gerência remota, ao contrário do Telnet.","o":["Telnet","SSH","FTP","HTTP"],"a":1,"id":101,"lesson":14},{"t":"sec","type":"single","q":"How are ACL rules evaluated?","e":"As regras são avaliadas <strong>de cima para baixo, parando na primeira que casar</strong> (first match).","o":["Bottom to top","Top to bottom, first match wins","Randomly","All at once"],"a":1,"id":102,"lesson":14},{"t":"sec","type":"single","q":"A MAC flooding attack against a switch is best mitigated by:","e":"O <strong>Port security</strong> limita os MACs por porta, mitigando ataques de flooding da tabela MAC.","o":["STP","Port security","VLAN 1","NAT"],"a":1,"id":103,"lesson":14},{"t":"sec","type":"single","q":"In a Huawei firewall, which security zone has the highest default priority?","e":"A zona <strong>Local</strong> tem a maior prioridade (100). Trust 85, DMZ 50, Untrust 5.","o":["Local","Trust","DMZ","Untrust"],"a":0,"id":104,"lesson":14},{"t":"sec","type":"single","q":"A firewall that tracks connection state is called:","e":"Um firewall <strong>stateful</strong> acompanha o estado das sessões, permitindo o tráfego de retorno de conexões válidas.","o":["Stateless","Stateful (session-based)","Proxy-only","Packet hub"],"a":1,"id":105,"lesson":14},{"t":"sec","type":"single","q":"802.1X is used to provide:","e":"O <strong>802.1X</strong> faz controle de acesso à rede baseado em porta, autenticando o dispositivo antes de liberar a conexão.","o":["Port-based network access control","VLAN routing","Link aggregation","Address translation"],"a":0,"id":106,"lesson":14},{"t":"sec","type":"multi","q":"Which methods can AAA use to authenticate users? (Choose all that apply)","e":"O AAA pode autenticar de forma <strong>local</strong> ou via servidores <strong>RADIUS/HWTACACS</strong>.","o":["Local database","RADIUS server","HWTACACS server","STP priority"],"a":[0,1,2],"id":107,"lesson":14},{"t":"wlan","type":"single","q":"Which technology in Wi-Fi 6 lets multiple users share a channel at the same time?","e":"O <strong>OFDMA</strong> divide o canal em subportadoras (RUs) e atende vários usuários ao mesmo tempo.","o":["CSMA/CD","OFDMA","WPA2","MU-MIMO (new in Wi-Fi 6)"],"a":1,"id":108,"lesson":13},{"t":"wlan","type":"single","q":"Which protocol runs between an AC and an AP to manage the AP?","e":"O <strong>CAPWAP</strong> gerencia os APs a partir da controladora (AC), com túneis de controle e dados.","o":["CAPWAP","PPPoE","LLDP","GRE"],"a":0,"id":109,"lesson":13},{"t":"wlan","type":"single","q":"What identifies the wireless network name that clients see?","e":"O <strong>SSID</strong> é o nome da rede sem fio. O BSSID é o MAC do rádio do AP.","o":["BSSID","SSID","VLAN ID","MAC address"],"a":1,"id":110,"lesson":13},{"t":"wlan","type":"single","q":"Which IEEE standard corresponds to Wi-Fi 6?","e":"Wi-Fi 6 = <strong>802.11ax</strong>. Wi-Fi 5 = 802.11ac; Wi-Fi 4 = 802.11n.","o":["802.11ac","802.11n","802.11ax","802.11g"],"a":2,"id":111,"lesson":13},{"t":"wlan","type":"single","q":"Which IEEE standard corresponds to Wi-Fi 5?","e":"Wi-Fi 5 = <strong>802.11ac</strong> (opera em 5 GHz).","o":["802.11n","802.11ac","802.11ax","802.11b"],"a":1,"id":112,"lesson":13},{"t":"wlan","type":"single","q":"In an AC + AP architecture, the APs are usually:","e":"Numa arquitetura com AC, os APs são <strong>Fit APs</strong>: leves e gerenciados centralmente pela controladora.","o":["Fat APs","Fit APs","Autonomous APs","Mesh gateways"],"a":1,"id":113,"lesson":13},{"t":"wlan","type":"single","q":"What is a BSSID?","e":"O <strong>BSSID</strong> é o endereço MAC do rádio do AP que identifica aquela célula sem fio.","o":["The network name","The MAC address of the AP radio","The client IP","A VLAN tag"],"a":1,"id":114,"lesson":13},{"t":"wlan","type":"single","q":"Which three channels are non-overlapping in the 2.4 GHz band?","e":"No 2.4 GHz, os canais não sobrepostos são <strong>1, 6 e 11</strong>.","o":["1, 3, 5","1, 6, 11","2, 7, 12","All channels"],"a":1,"id":115,"lesson":13},{"t":"wlan","type":"single","q":"Which access method does Wi-Fi use at the MAC layer?","e":"O Wi-Fi usa <strong>CSMA/CA</strong> (evita colisão), já que não consegue detectá-las como a Ethernet cabeada.","o":["CSMA/CD","CSMA/CA","Token passing","TDMA"],"a":1,"id":116,"lesson":13},{"t":"wlan","type":"tf","q":"Wi-Fi 6 operates only on the 5 GHz band.","e":"Falso. O Wi-Fi 6 opera tanto em <strong>2.4 GHz quanto em 5 GHz</strong>.","a":1,"id":117,"lesson":13},{"t":"wlan","type":"single","q":"A Fat AP is characterized by:","e":"O <strong>Fat AP</strong> opera de forma autônoma, sem depender de uma AC - adequado a redes pequenas.","o":["Being managed by an AC","Operating standalone without an AC","Only supporting Wi-Fi 6","Having no radio"],"a":1,"id":118,"lesson":13},{"t":"wlan","type":"single","q":"What does WLAN roaming allow?","e":"O <strong>roaming</strong> permite ao cliente mover-se entre APs mantendo a conexão sem reautenticar do zero.","o":["Faster wired links","A client to move between APs keeping its connection","Static IP only","Channel bonding"],"a":1,"id":119,"lesson":13},{"t":"wlan","type":"single","q":"How many tunnels does CAPWAP establish between AC and AP?","e":"O CAPWAP usa <strong>dois túneis</strong>: um de controle (gerência) e um de dados.","o":["One","Two (control and data)","Three","Four"],"a":1,"id":120,"lesson":13},{"t":"wlan","type":"single","q":"What is the main role of an AC (Access Controller) in a WLAN?","e":"A <strong>AC</strong> gerencia e configura os APs de forma centralizada (Fit APs).","o":["Route between VLANs","Centrally manage and configure APs","Assign public IPs","Filter web content"],"a":1,"id":121,"lesson":13},{"t":"wlan","type":"single","q":"Which security standard offers the strongest Wi-Fi encryption among these?","e":"O <strong>WPA3</strong> é o mais recente e seguro; WPA2 vem antes, e WEP é obsoleto/inseguro.","o":["WEP","WPA","WPA2","WPA3"],"a":3,"id":122,"lesson":13},{"t":"wlan","type":"single","q":"Which frequency bands are commonly used by Wi-Fi?","e":"O Wi-Fi usa comumente as bandas de <strong>2.4 GHz e 5 GHz</strong> (o Wi-Fi 6E adiciona 6 GHz).","o":["900 MHz and 1.8 GHz","2.4 GHz and 5 GHz","10 GHz and 20 GHz","Only 5 GHz"],"a":1,"id":123,"lesson":13},{"t":"wan","type":"multi","q":"Which authentication protocols does PPP support? (Choose all that apply)","e":"O PPP suporta <strong>PAP</strong> (texto claro) e <strong>CHAP</strong> (desafio-resposta, mais seguro).","o":["PAP","CHAP","WPA2","802.1X"],"a":[0,1],"id":124,"lesson":18},{"t":"wan","type":"single","q":"What does PPPoE stand for / combine?","e":"<strong>PPPoE = PPP over Ethernet</strong>, muito usado em acesso de banda larga residencial.","o":["PPP over Ethernet","PPP over IPsec","Point-to-point over fiber","Private Path over Ethernet"],"a":0,"id":125,"lesson":18},{"t":"wan","type":"single","q":"Which two sub-protocols make up PPP?","e":"O PPP usa o <strong>LCP</strong> (estabelece/controla o enlace) e o <strong>NCP</strong> (negocia protocolos de rede, ex.: IP).","o":["LCP and NCP","TCP and UDP","PAP and CHAP","IP and ARP"],"a":0,"id":126,"lesson":18},{"t":"wan","type":"tf","q":"PAP sends the password in clear text during authentication.","e":"Verdadeiro. O <strong>PAP</strong> envia a senha em texto claro; o CHAP usa hash de desafio, sendo mais seguro.","a":0,"id":127,"lesson":18},{"t":"wan","type":"single","q":"A WAN is used to:","e":"Uma <strong>WAN</strong> conecta redes geograficamente distantes (ex.: filiais em cidades diferentes).","o":["Connect devices in one room","Connect geographically dispersed networks","Replace VLANs","Assign MAC addresses"],"a":1,"id":128,"lesson":18},{"t":"wan","type":"single","q":"How many stages does the PPPoE process have?","e":"O PPPoE tem <strong>duas fases</strong>: Discovery (descoberta) e Session (sessão PPP).","o":["One","Two (discovery and session)","Three","Four"],"a":1,"id":129,"lesson":18},{"t":"wan","type":"single","q":"CHAP authenticates using:","e":"O <strong>CHAP</strong> usa um desafio-resposta com hash, sem enviar a senha pela rede - mais seguro que o PAP.","o":["Clear-text password","A challenge-response handshake","No authentication","A shared VLAN"],"a":1,"id":130,"lesson":18},{"t":"wan","type":"single","q":"At which OSI layer does PPP operate?","e":"O PPP é um protocolo de <strong>camada de enlace (data link)</strong> usado em enlaces WAN ponto a ponto.","o":["Physical","Data link","Network","Transport"],"a":1,"id":131,"lesson":18},{"t":"ipv6","type":"single","q":"How many bits long is an IPv6 address?","e":"O IPv6 tem <strong>128 bits</strong> (contra 32 bits do IPv4).","o":["32","64","128","256"],"a":2,"id":132,"lesson":11},{"t":"ipv6","type":"single","q":"Which prefix identifies an IPv6 link-local address?","e":"Endereços link-local usam o prefixo <strong>FE80::/10</strong>, válidos apenas no enlace local.","o":["FE80::/10","FF00::/8","2000::/3","::1/128"],"a":0,"id":133,"lesson":11},{"t":"ipv6","type":"tf","q":"IPv6 still uses broadcast addresses like IPv4.","e":"Falso. O IPv6 <strong>eliminou o broadcast</strong>; usa multicast e anycast no lugar.","a":1,"id":134,"lesson":11},{"t":"ipv6","type":"single","q":"What is the IPv6 loopback address?","e":"O loopback do IPv6 é <strong>::1</strong> (equivalente ao 127.0.0.1 do IPv4).","o":["::1","127.0.0.1","FE80::1","::0"],"a":0,"id":135,"lesson":11},{"t":"ipv6","type":"single","q":"Which mechanism replaces ARP in IPv6?","e":"O IPv6 usa o <strong>NDP (Neighbor Discovery)</strong>, baseado em ICMPv6, no lugar do ARP.","o":["ARP","NDP (Neighbor Discovery)","RARP","DHCP"],"a":1,"id":136,"lesson":11},{"t":"ipv6","type":"single","q":"Which prefix is used for IPv6 global unicast addresses?","e":"Os endereços globais unicast atuais usam o bloco <strong>2000::/3</strong>.","o":["FE80::/10","2000::/3","FF00::/8","::/128"],"a":1,"id":137,"lesson":11},{"t":"ipv6","type":"single","q":"Which prefix identifies IPv6 multicast addresses?","e":"Endereços multicast IPv6 usam o prefixo <strong>FF00::/8</strong>.","o":["FE80::/10","FF00::/8","2000::/3","::/0"],"a":1,"id":138,"lesson":11},{"t":"ipv6","type":"single","q":"What does SLAAC allow an IPv6 host to do?","e":"O <strong>SLAAC</strong> permite ao host configurar seu endereço automaticamente sem servidor DHCP.","o":["Encrypt traffic","Auto-configure its address without DHCP","Route packets","Assign VLANs"],"a":1,"id":139,"lesson":11},{"t":"ipv6","type":"single","q":"How many bits is a typical IPv6 interface ID?","e":"O interface ID típico tem <strong>64 bits</strong> (a outra metade do endereço é o prefixo de rede /64).","o":["16","48","64","128"],"a":2,"id":140,"lesson":11},{"t":"ipv6","type":"tf","q":"Consecutive groups of zeros in an IPv6 address can be abbreviated with a double colon (::) once.","e":"Verdadeiro. O <strong>::</strong> substitui um bloco contíguo de zeros e pode ser usado <strong>uma única vez</strong> por endereço.","a":0,"id":141,"lesson":11},{"t":"ipv6","type":"single","q":"EUI-64 is used to:","e":"O <strong>EUI-64</strong> gera o interface ID de 64 bits a partir do endereço MAC de 48 bits.","o":["Encrypt IPv6","Generate a 64-bit interface ID from a MAC","Compress headers","Route between areas"],"a":1,"id":142,"lesson":11},{"t":"ipv6","type":"single","q":"Which ICMPv6 messages are central to IPv6 Neighbor Discovery?","e":"O NDP usa mensagens <strong>NS/NA e RS/RA</strong> (Neighbor/Router Solicitation e Advertisement).","o":["Echo only","NS/NA and RS/RA","SYN/ACK","LSU/LSAck"],"a":1,"id":143,"lesson":11},{"t":"mgmt","type":"single","q":"Which method does the VRP NOT support for configuring a device via CLI?","e":"O <strong>FTP</strong> transfere arquivos, não configura via CLI. Config: Console, mini-USB, Telnet, SSH e Web.","o":["Console port","Telnet","FTP","Mini-USB port"],"a":2,"id":144,"lesson":19},{"t":"mgmt","type":"single","q":"Which SNMP message does a device send unsolicited to alert the manager of an event?","e":"O <strong>Trap</strong> é enviado espontaneamente pelo agente para avisar o gerente (ex.: link caiu).","o":["Get","Set","Trap","Response"],"a":2,"id":145,"lesson":19},{"t":"mgmt","type":"single","q":"Which command enters the system view from the user view on the VRP?","e":"O comando <strong>system-view</strong> leva do user view ([&lt;Huawei&gt;]) ao system view ([Huawei]).","o":["enable","system-view","configure terminal","conf t"],"a":1,"id":146,"lesson":19},{"t":"mgmt","type":"single","q":"Which prompt indicates the user view on a Huawei device?","e":"O user view aparece como <strong>&lt;Huawei&gt;</strong> (colchetes angulares). O system view usa [Huawei].","o":["<Huawei>","[Huawei]","[Huawei-GE0/0/0]","Huawei#"],"a":0,"id":147,"lesson":19},{"t":"mgmt","type":"single","q":"In which view is the 'sysname' command used to set the device name?","e":"O <strong>system view</strong> é onde se define o nome do dispositivo com o comando sysname.","o":["User view","System view","Interface view","Protocol view"],"a":1,"id":148,"lesson":19},{"t":"mgmt","type":"multi","q":"Which of the following are valid VRP command-line views? (Choose all that apply)","e":"São views válidas: <strong>User, System, Interface e Protocol view</strong> (ex.: [Huawei-ospf-1]).","o":["User view","System view","Interface view","Protocol view"],"a":[0,1,2,3],"id":149,"lesson":19},{"t":"mgmt","type":"single","q":"Which command displays a brief summary of interfaces and their IP status?","e":"O <strong>display ip interface brief</strong> lista as interfaces com IP, estado físico e de protocolo.","o":["show ip int brief","display ip interface brief","display interface all","list interface"],"a":1,"id":150,"lesson":19},{"t":"mgmt","type":"single","q":"Which SNMP version adds authentication and encryption?","e":"O <strong>SNMPv3</strong> adiciona autenticação e criptografia; v1 e v2c usam apenas community strings.","o":["v1","v2c","v3","v2"],"a":2,"id":151,"lesson":19},{"t":"mgmt","type":"single","q":"What is NTP used for?","e":"O <strong>NTP</strong> sincroniza o relógio dos dispositivos da rede - essencial para logs e certificados.","o":["Name resolution","Time synchronization","Traffic filtering","Address translation"],"a":1,"id":152,"lesson":19},{"t":"mgmt","type":"single","q":"Which command saves the current configuration on the VRP?","e":"O comando <strong>save</strong> grava a configuração corrente no arquivo de inicialização (flash).","o":["write memory","save","copy run start","commit only"],"a":1,"id":153,"lesson":19},{"t":"mgmt","type":"single","q":"Which command displays the running configuration on the VRP?","e":"O <strong>display current-configuration</strong> mostra a configuração ativa do dispositivo.","o":["show running-config","display current-configuration","display config","list config"],"a":1,"id":154,"lesson":19},{"t":"mgmt","type":"single","q":"In VRP, how do you negate or remove a configured command?","e":"Usa-se a palavra-chave <strong>undo</strong> antes do comando para desfazer/remover a configuração.","o":["no","undo","delete","remove"],"a":1,"id":155,"lesson":19},{"t":"mgmt","type":"single","q":"What is the purpose of the VRP configuration file?","e":"O arquivo de configuração <strong>armazena os comandos para que o dispositivo reinicie com as configurações salvas</strong>.","o":["Store logs only","Store commands so the device boots with saved settings","Hold the OS image","Cache ARP entries"],"a":1,"id":156,"lesson":19},{"t":"mgmt","type":"single","q":"At the VRP visit level (level 0), a user can run mainly:","e":"No nível 0 (visit) o usuário roda só <strong>diagnóstico e alguns display</strong> (ping, tracert). Configuração exige nível 2+.","o":["All configuration commands","Diagnostic commands like ping and tracert","File system management","User management"],"a":1,"id":157,"lesson":19},{"t":"sdn","type":"single","q":"What does SDN fundamentally separate?","e":"O <strong>SDN</strong> separa o plano de controle do plano de encaminhamento, centralizando as decisões numa controladora.","o":["Physical and virtual networks","The control plane from the forwarding plane","IPv4 from IPv6","LAN from WAN"],"a":1,"id":158,"lesson":20},{"t":"sdn","type":"single","q":"Which protocol is a classic southbound interface in SDN?","e":"O <strong>OpenFlow</strong> é uma interface southbound clássica: a controladora programa as tabelas de fluxo dos switches.","o":["BGP","OpenFlow","HTTP","SNMPv1"],"a":1,"id":159,"lesson":20},{"t":"sdn","type":"single","q":"In SDN, the controller acts as the:","e":"A controladora é o <strong>cérebro centralizado</strong> (plano de controle) que decide o encaminhamento da rede.","o":["Forwarding chip","Centralized control plane","Physical cable","End host"],"a":1,"id":160,"lesson":20},{"t":"sdn","type":"single","q":"The SDN northbound interface communicates with:","e":"A interface <strong>northbound</strong> conecta a controladora às aplicações/sistemas de negócio (ex.: via APIs REST).","o":["Forwarding switches","Applications and business systems","Physical ports","End users directly"],"a":1,"id":161,"lesson":20},{"t":"sdn","type":"single","q":"A traditional (non-SDN) network device combines:","e":"No dispositivo tradicional, os planos de <strong>controle e de dados coexistem</strong> no mesmo equipamento.","o":["Only the data plane","The control and data planes together","Only the control plane","Neither plane"],"a":1,"id":162,"lesson":20},{"t":"sdn","type":"single","q":"Which language is commonly used for network automation scripting?","e":"O <strong>Python</strong> é a linguagem mais comum para automação de redes (scripts, APIs, ferramentas).","o":["C only","Python","Assembly","HTML"],"a":1,"id":163,"lesson":20},{"t":"sdn","type":"tf","q":"One of the main goals of SDN is to make the network programmable.","e":"Verdadeiro. O <strong>SDN</strong> torna a rede programável e centralizada, facilitando automação e agilidade.","a":0,"id":164,"lesson":20},{"t":"sdn","type":"single","q":"NETCONF is:","e":"O <strong>NETCONF</strong> é um protocolo de gerência/configuração de rede, geralmente usando dados modelados em YANG.","o":["A routing protocol","A network configuration management protocol","A cabling standard","An encryption cipher"],"a":1,"id":165,"lesson":20},{"t":"sdn","type":"single","q":"YANG is:","e":"O <strong>YANG</strong> é uma linguagem de modelagem de dados, usada com NETCONF/RESTCONF para descrever configurações.","o":["A data modeling language","A physical interface","A firewall","A switch model"],"a":0,"id":166,"lesson":20},{"t":"sdn","type":"single","q":"A key benefit of SDN is:","e":"O SDN oferece <strong>controle centralizado e programável</strong>, simplificando a gestão e acelerando mudanças.","o":["More manual CLI work","Centralized, programmable control","Removing all software","Eliminating IP addresses"],"a":1,"id":167,"lesson":20},{"t":"mgmt","type":"single","q":"An administrator configures a Huawei router:\n<Huawei> system-view\n[Huawei] user-interface maximum-vty 7\nWhich statement about this configuration is correct?","o":["Up to 7 users can log in at the same time through the asynchronous serial port","Up to 7 users can log in at the same time through Telnet","Up to 7 users can log in at the same time through the console port","If a user forgets the password, the account is locked after 7 attempts"],"a":1,"e":"O comando <strong>user-interface maximum-vty 7</strong> define o numero maximo de usuarios VTY simultaneos. VTY e o acesso remoto por <strong>Telnet/SSH</strong> - nao console nem porta serial. Console/AUX sao acessos fisicos, a parte do VTY.","id":168,"lesson":19},{"t":"ip","type":"single","q":"Which packet does OSPF use to maintain the neighbor relationship?","o":["Hello","DD","LSR","LSU"],"a":0,"e":"O pacote <strong>Hello</strong> descobre e mantem as adjacencias (enviado periodicamente; sem Hello, o vizinho morre apos o Dead interval). Os 5 pacotes: Hello (mantem vizinho), DD (descreve o LSDB), LSR (pede LSA), LSU (envia LSA), LSAck (confirma LSU).","id":169,"lesson":8},{"t":"ip","type":"single","q":"On a broadcast network running OSPF, what is the stable neighbor state between two DRother routers (neither DR nor BDR)?","o":["2-Way (Bidirectional)","Full","Down","Loading"],"a":0,"e":"Dois roteadores <strong>DRother</strong> estabilizam em <strong>2-Way</strong>: eles se enxergam, mas so formam adjacencia Full com o DR e o BDR, nao entre si. Isso reduz o numero de adjacencias na rede.","id":170,"lesson":8},{"t":"eth","type":"multi","q":"The 'display stp' output for a port shows:\nPort Role: Designated Port\nPort Priority: 128\nPort Cost(Dot1T): Config=100 / Active=100\nDesignated Bridge/Port: 32768.4c1f-cc4f-26df / 128.1\nPort Edged: Config=default / Active=disabled\nPort STP Mode: STP\nWhich statements are correct? (Choose all that apply)","o":["By default, the edge attribute of the port is enabled","The switch is using the default priority","The administrator ran 'stp cost' to change the interface cost","The default priority of a switch running spanning tree is 32767"],"a":[1,2],"e":"<strong>B</strong>: prioridade de porta 128 e de bridge 32768 sao os padroes. <strong>C</strong>: no modo dot1t o custo default de uma GE seria 20000; Config=100 indica ajuste manual. A e falsa (a edge esta disabled por padrao) e D e falsa (o padrao e <strong>32768</strong>, nao 32767).","id":171,"lesson":4},{"t":"eth","type":"multi","q":"Which statements about the 'undo portswitch' command are correct?\n[Huawei] interface eth-trunk 1\n[Huawei-Eth-Trunk1] undo portswitch\n(Choose all that apply)","o":["It lets a Layer 3 switch support Layer 2 link aggregation","It lets a Layer 3 switch support Layer 3 link aggregation","It lets a router support Layer 2 link aggregation","It lets a router support Layer 3 link aggregation"],"a":[1,3],"e":"O <strong>undo portswitch</strong> converte uma interface de camada 2 (switching) em interface de <strong>camada 3</strong> (roteada). Assim habilita agregacao de link L3 tanto num switch L3 (B) quanto num roteador (D). O portswitch faz o inverso, voltando a interface para L2.","id":172,"lesson":4},{"t":"eth","type":"multi","q":"Which statements about the forwarding behavior of an ACCESS port are INCORRECT? (Choose all that apply)","o":["When it receives an untagged frame, the switch adds a tag with the port's PVID","When it sends frames out, the switch adds a tag carrying the port's PVID","When it receives a tagged frame whose VLAN matches the port's PVID, the switch accepts it","When it receives a tagged frame whose VLAN matches the port's PVID, the switch discards it"],"a":[1,3],"e":"A questao pede as <strong>incorretas</strong>. B e falsa: ao <strong>enviar</strong>, a access port <strong>remove a tag</strong> (sai untagged), nao adiciona. D e falsa: se a VLAN da tag bate com a PVID, a porta <strong>aceita</strong> (por isso C e correta e D incorreta). A e comportamento correto no recebimento.","id":173,"lesson":4},{"t":"sec","type":"multi","q":"A host 192.168.1.1/24 needs to reach the server 160.131.20.1 on the Internet. The admin configures:\n[RTA] interface GigabitEthernet 0/0/0\n[RTA-GigabitEthernet0/0/0] nat outbound 2000\nWhich statements are correct? (Choose all that apply)","o":["192.168.1.1 is translated to the public IP of GigabitEthernet0/0/0 on the gateway router","192.168.1.1 is translated to a public IP taken from an address pool","The administrator configured a NAT Server","The administrator configured Easy IP"],"a":[0,3],"e":"Um <strong>nat outbound</strong> com ACL mas <strong>sem address-group</strong> e o modo <strong>Easy IP</strong>: usa o proprio IP da interface de saida como endereco publico (A e D). Nao ha pool (B falso) nem NAT Server (C falso).","id":174,"lesson":14},{"t":"fund","type":"multi","q":"Which of the following are typical layers of a campus network architecture? (Choose all that apply)","o":["Access layer","Aggregation (distribution) layer","Core layer","Security zone"],"a":[0,1,2],"e":"A rede de campus tem tres camadas: <strong>acesso, agregacao (distribuicao) e nucleo (core)</strong>. Zona de seguranca e conceito de firewall, nao uma camada do campus.","id":175,"lesson":1},{"t":"mgmt","type":"multi","q":"Compared with SNMPv1, which TWO message types were added in SNMPv2c? (Choose all that apply)","o":["SetRequest","GetBulkRequest","GetNextRequest","InformRequest"],"a":[1,3],"e":"O <strong>SNMPv2c</strong> acrescentou o <strong>GetBulkRequest</strong> (busca em massa, eficiente) e o <strong>InformRequest</strong> (trap confirmado). SetRequest e GetNextRequest ja existiam no SNMPv1.","id":176,"lesson":19},{"t":"ip","type":"single","q":"What is the correct sequence of OSPF neighbor states when establishing a full adjacency?","o":["Down, Init, 2-Way, ExStart, Exchange, Loading, Full","Down, 2-Way, Init, ExStart, Exchange, Loading, Full","Down, Init, ExStart, 2-Way, Exchange, Loading, Full","Init, Down, 2-Way, Exchange, ExStart, Loading, Full"],"a":0,"e":"A ordem e <strong>Down, Init, 2-Way, ExStart, Exchange, Loading, Full</strong>. Em 2-Way ocorre a eleicao de DR/BDR; em Full o LSDB esta sincronizado.","id":177,"lesson":8},{"t":"ip","type":"single","q":"In which OSPF state are the master/slave relationship and the initial DD sequence number negotiated?","o":["Init","2-Way","ExStart","Loading"],"a":2,"e":"No estado <strong>ExStart</strong> os roteadores negociam master/slave (maior Router ID vira master) e o numero de sequencia inicial dos pacotes DD.","id":178,"lesson":8},{"t":"ip","type":"single","q":"In which OSPF state does a router request missing LSAs with LSR packets and receive them via LSU?","o":["Exchange","Loading","Full","2-Way"],"a":1,"e":"No <strong>Loading</strong> o roteador pede os LSAs faltantes com LSR, recebe via LSU e confirma com LSAck. No Exchange (antes) so se trocam os DD (resumos do LSDB).","id":179,"lesson":8},{"t":"fund","type":"tf","q":"The IPv4 packet format is not fixed. If a packet does not need to be fragmented, the Identification / Flags / Fragment Offset fields are not needed.","a":1,"e":"Falso. Identification, Flags e Fragment Offset fazem parte do <strong>cabecalho IPv4 fixo de 20 bytes</strong> - existem sempre, mesmo sem fragmentacao (ficam apenas sem uso). O que e variavel no IPv4 e o campo Options, nao esses.","id":180,"lesson":1},{"t":"fund","type":"single","q":"Which of the following is NOT a network layer protocol?","o":["IP","ICMP","FTP","IPX"],"a":2,"e":"O <strong>FTP</strong> e de camada de aplicacao. IP, ICMP e IPX (legado da Novell) sao todos de camada de rede. Pegadinha: IPX e obscuro, mas e de rede.","id":181,"lesson":1},{"t":"ip","type":"single","q":"To which class does the address 201.222.5.64 belong?","o":["Class A","Class B","Class C","Class D"],"a":2,"e":"O primeiro octeto e <strong>201</strong>, na faixa 192-223, portanto <strong>Classe C</strong>. Faixas do 1o octeto: A 1-126, B 128-191, C 192-223, D 224-239.","id":182,"lesson":8},{"t":"ip","type":"single","q":"A Class C network must be divided into at least 9 subnets, and each subnet must support at most 8 hosts. Which subnet mask should be used?","o":["/25 (255.255.255.128)","/26 (255.255.255.192)","/27 (255.255.255.224)","/28 (255.255.255.240)"],"a":3,"e":"Para <strong>9 sub-redes</strong> precisa de 4 bits de sub-rede (2^4=16 >= 9); 3 bits dariam so 8. Para <strong>8 hosts</strong>, 4 bits de host dao 2^4-2=14 (cabe 8). 4+4 fecha o octeto = <strong>/28</strong> (16 sub-redes, 14 hosts). O /27 da so 8 sub-redes, insuficiente. (Obs.: gabaritos que marcam 'CD' estao errados - so o /28 atende.)","id":183,"lesson":8},{"t":"ip","type":"single","q":"OSPF interface cost = reference bandwidth / interface bandwidth. What is the DEFAULT reference bandwidth on Huawei devices?","o":["100 Mbps","1000 Mbps","10 Mbps","100 Gbps"],"a":0,"e":"O reference bandwidth padrao e <strong>100 Mbps</strong>. Ex.: numa GE (1000 Mbps), custo = 100/1000 arredondado para o minimo 1. Menor custo e preferido.","id":184,"lesson":8},{"t":"ip","type":"single","q":"On a broadcast network, how is the OSPF DR elected?","o":["Highest priority; if tied, highest Router ID","Lowest Router ID","Highest interface IP address","The first router that boots up"],"a":0,"e":"Vence a <strong>maior prioridade</strong> (padrao 1); em empate, o <strong>maior Router ID</strong>. Prioridade 0 nunca vira DR. A eleicao nao e preemptiva.","id":185,"lesson":8},{"t":"ip","type":"single","q":"If no Router ID is manually set, how does a Huawei router choose its OSPF Router ID?","o":["Highest loopback IP; otherwise highest physical interface IP","Lowest configured IP address","Derived from the MAC address","Randomly generated at boot"],"a":0,"e":"Prioridade de escolha: <strong>manual > maior IP de loopback > maior IP de interface fisica</strong>. Por isso loopbacks sao recomendados (estaveis).","id":186,"lesson":8},{"t":"ip","type":"single","q":"What is the OSPF router priority value that prevents a router from ever becoming DR or BDR?","o":["0","1","128","255"],"a":0,"e":"Prioridade <strong>0</strong> retira o roteador da eleicao - ele nunca sera DR nem BDR. O padrao e 1; maior prioridade tem preferencia.","id":187,"lesson":8},{"t":"ip","type":"single","q":"What is the default OSPF router priority on a Huawei interface?","o":["0","1","10","32768"],"a":1,"e":"A prioridade padrao de interface OSPF e <strong>1</strong>. Aumente-a para forcar um roteador a ser DR; zere para excluir da eleicao.","id":188,"lesson":8},{"t":"ip","type":"tf","q":"OSPF DR/BDR election is preemptive: if a router with a higher priority appears later, it immediately takes over as DR.","a":1,"e":"Falso. A eleicao <strong>nao e preemptiva</strong>. Um roteador com prioridade maior que chega depois vira DR somente apos a proxima eleicao (ex.: reinicio do processo/rede), nao na hora.","id":189,"lesson":8},{"t":"ip","type":"multi","q":"Which two OSPF network types elect a DR and BDR? (Choose all that apply)","o":["Broadcast","NBMA","Point-to-point","Point-to-multipoint"],"a":[0,1],"e":"Somente <strong>Broadcast e NBMA</strong> elegem DR/BDR (para reduzir adjacencias). Em P2P e P2MP nao ha eleicao.","id":190,"lesson":8},{"t":"ip","type":"single","q":"Which three tables does OSPF maintain?","o":["Neighbor table, Link-State Database (LSDB), Routing table","ARP table, MAC table, Routing table","Hello table, DR table, CAM table","Adjacency table, VLAN table, FIB"],"a":0,"e":"OSPF mantem a <strong>tabela de vizinhos</strong> (quem conheco), o <strong>LSDB</strong> (mapa da area, identico entre roteadores da mesma area) e alimenta a <strong>tabela de roteamento</strong> (resultado do SPF).","id":191,"lesson":8},{"t":"ip","type":"tf","q":"All routers within the same OSPF area have an identical Link-State Database (LSDB).","a":0,"e":"Verdadeiro. Sincronizar o <strong>LSDB identico</strong> dentro da area e o objetivo do estado Full; e sobre esse banco que o SPF (Dijkstra) calcula os caminhos.","id":192,"lesson":8},{"t":"ip","type":"single","q":"Which command displays the OSPF neighbor table on a Huawei device?","o":["display ospf peer","display ospf lsdb","display ip routing-table","display ospf interface"],"a":0,"e":"<strong>display ospf peer</strong> mostra os vizinhos e o estado da adjacencia. O LSDB e visto com display ospf lsdb; as rotas com display ip routing-table.","id":193,"lesson":8},{"t":"ip","type":"single","q":"On a broadcast network, what are the default OSPF Hello and Dead intervals?","o":["10 s and 40 s","30 s and 120 s","10 s and 30 s","5 s and 20 s"],"a":0,"e":"Em broadcast: Hello <strong>10 s</strong> e Dead <strong>40 s</strong> (4x Hello). Em NBMA sao 30 s e 120 s. Hello e Dead precisam bater entre vizinhos para a adjacencia subir.","id":194,"lesson":8},{"t":"ip","type":"single","q":"Which OSPF area is the backbone area, to which all other areas must connect?","o":["Area 0","Area 1","Area 255","Area 100"],"a":0,"e":"A <strong>Area 0</strong> (0.0.0.0) e o backbone. Toda area nao-backbone deve se conectar a ela, normalmente via um ABR.","id":195,"lesson":8},{"t":"ip","type":"single","q":"In OSPF, what does an ABR (Area Border Router) do?","o":["Connects two or more OSPF areas","Redistributes external routes into OSPF","Elects the DR","Runs BGP"],"a":0,"e":"O <strong>ABR</strong> fica na fronteira entre areas (uma delas a area 0) e as interliga. Ja o <strong>ASBR</strong> injeta rotas externas (de outro protocolo) no OSPF.","id":196,"lesson":8},{"t":"ip","type":"single","q":"What does LSDB stand for in OSPF?","o":["Link-State Database","Link State Descriptor Buffer","Link Sequence Data Block","Load State Database"],"a":0,"e":"<strong>LSDB = Link-State Database</strong>. E o mapa completo da area - todos os roteadores da mesma area tem um LSDB identico. O SPF roda sobre ele.","id":197,"lesson":8},{"t":"ip","type":"single","q":"What does LSA stand for in OSPF?","o":["Link State Address","Link-State Advertisement","Link Send Announcement","Load State Access"],"a":1,"e":"<strong>LSA = Link-State Advertisement</strong>. E a unidade de informacao dentro do LSDB. Cada roteador gera seu Type 1 (Router LSA).","id":198,"lesson":8},{"t":"ip","type":"single","q":"What does DD stand for in OSPF?","o":["Data Description","Database Description","Data Delivery","Direct Descriptor"],"a":1,"e":"<strong>DD = Database Description</strong>. Resumo do LSDB (nao o LSA inteiro, so o cabecalho). Usado no estado Exchange.","id":199,"lesson":8},{"t":"ip","type":"single","q":"What is the purpose of an LSR packet in OSPF?","o":["To advertise the complete Link State Database","To request a missing or updated LSA","To acknowledge receipt of an LSA","To elect the DR"],"a":1,"e":"<strong>LSR = Link State Request</strong>. Significa 'me manda esse LSA completo'. Enviado durante Loading quando falta algum.","id":200,"lesson":8},{"t":"ip","type":"single","q":"What does LSU stand for in OSPF?","o":["Link State Update","Link State Upload","Link Send Unit","Load State Update"],"a":0,"e":"<strong>LSU = Link State Update</strong>. E a resposta com 'aqui esta o LSA completo'. Pode carregar um ou varios LSAs.","id":201,"lesson":8},{"t":"ip","type":"single","q":"What does LSAck stand for in OSPF?","o":["Link State Acknowledge","Link Send Acknowledgment","Load State Access Key","Link Sequence Ack"],"a":0,"e":"<strong>LSAck = Link State Acknowledgment</strong>. Confirmacao de recebimento do LSA. Garante confiabilidade da sincronizacao.","id":202,"lesson":8}];
+BANK.forEach((q,i)=>q.id=i);
+
+/* ============================ ESTADO ============================ */
+let quiz=[], answers=[], cur=0, count=20, selTopics=new Set(Object.keys(TOPICS)), timerInt=null, t0=0, mode='train', remaining=0;
+
+/* ============================ SETUP ============================ */
+const $=id=>document.getElementById(id);
+function renderCounts(){
+  const opts=[{v:10,l:'rápido'},{v:20,l:'padrão'},{v:40,l:'longo'},{v:0,l:'todas'}];
+  $('counts').innerHTML=opts.map(o=>`<div class="count-opt${o.v===count?' on':''}" data-c="${o.v}">${o.v||'∞'}<small>${o.l}</small></div>`).join('');
+  document.querySelectorAll('.count-opt').forEach(el=>el.onclick=()=>{count=+el.dataset.c;renderCounts();updateAvail();});
+}
+function renderChips(){
+  $('chips').innerHTML=Object.entries(TOPICS).map(([k,v])=>
+    `<span class="chip${selTopics.has(k)?' on':''}" data-k="${k}">${v.n}<span class="w">${v.w}%</span></span>`).join('');
+  document.querySelectorAll('.chip').forEach(el=>el.onclick=()=>{
+    const k=el.dataset.k; selTopics.has(k)?selTopics.delete(k):selTopics.add(k);
+    if(selTopics.size===0)selTopics.add(k); renderChips();
+  renderLesson();updateAvail();
+  });
+}
+function poolSize(){return BANK.filter(q=>selTopics.has(q.t)).length;}
+function updateAvail(){
+  const p=poolSize(); const n=count===0?p:Math.min(count,p);
+  $('avail').innerHTML=`<b>${n}</b> de <b>${p}</b> questões disponíveis nos temas escolhidos`;
+}
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+
+function setMode(m){
+  mode=m;
+  document.querySelectorAll('.seg-btn').forEach(b=>b.classList.toggle('on', b.dataset.mode===m));
+  const exam=m==='exam';
+  const lesson=m==='lesson';
+  $('panelCount').classList.toggle('hide',exam||lesson);
+  $('panelTopics').classList.toggle('hide',exam||lesson);
+  $('panelLesson').classList.toggle('hide', !lesson);
+  $('panelExam').classList.toggle('hide',!exam);
+  let desc;
+  if(exam) desc='Simulação fiel: 60 questões, 90 minutos, em inglês, sem correção até o fim.';
+  else if(lesson) desc='Escolha uma aula do curso para treinar só os tópicos daquele módulo.';
+  else desc='Escolha a quantidade e os temas livremente. Correção e explicações no final.';
+  $('modeDesc').textContent=desc;
+}
+document.querySelectorAll('.seg-btn').forEach(b=>b.onclick=()=>setMode(b.dataset.mode));
+
+function launch(kind){
+  mode=kind;
+  let pool,n;
+  if(kind==='exam'){ pool=shuffle(BANK.slice()); n=Math.min(60,pool.length); }
+  else if(kind==='lesson'){ pool=shuffle(BANK.filter(q=>q.lesson==selLessonId).slice()); n=pool.length; }
+  else { pool=shuffle(BANK.filter(q=>selTopics.has(q.t)).slice()); n=count===0?pool.length:Math.min(count,pool.length); }
+  quiz=pool.slice(0,n); answers=quiz.map(q=>q.type==='multi'?[]:(q.type==='match'?q.left.map(()=>''):null));
+  cur=0; $('setup').classList.add('hide'); $('report').classList.add('hide'); $('quiz').classList.remove('hide');
+  $('qtot').textContent=quiz.length;
+  const en=kind==='exam';
+  $('lblQuestion').textContent=en?'Question':'Questão';
+  $('prev').textContent=en?'Previous':'Voltar';
+  $('finishNow').textContent=en?'Finish now':'Finalizar agora';
+  $('quizNote').textContent=en
+    ?'Answers are graded only at the end. You can go back and review before finishing.'
+    :'Suas respostas são corrigidas só no final. Você pode voltar e revisar antes de finalizar.';
+  startTimer(); renderQ(); window.scrollTo(0,0);
+}
+$('start').onclick=()=>launch('train');
+$('startExam').onclick=()=>launch('exam');
+
+/* ============================ TIMER ============================ */
+function fmt(s){return `${String(Math.floor(s/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`;}
+function startTimer(){
+  t0=Date.now(); clearInterval(timerInt);
+  const total=mode==='exam'?90*60:0;
+  $('timer').classList.remove('timer-danger');
+  $('timer').textContent=mode==='exam'?fmt(total):'00:00';
+  timerInt=setInterval(()=>{
+    const el=Math.floor((Date.now()-t0)/1000);
+    if(mode==='exam'){
+      remaining=Math.max(0,total-el);
+      $('timer').textContent=fmt(remaining);
+      if(remaining<=300)$('timer').classList.add('timer-danger');
+      if(remaining<=0){clearInterval(timerInt); finish();}
+    } else { $('timer').textContent=fmt(el); }
+  },1000);
+}
+
+/* ============================ QUIZ ============================ */
+function renderQ(){
+  const q=quiz[cur];
+  $('qpos').textContent=cur+1;
+  $('fill').style.width=((cur)/quiz.length*100)+'%';
+  $('qtag').textContent=TOPICS[q.t].n;
+  const typeLabel={single:'Single choice',multi:'Multiple answer',tf:'True / False',match:'Matching'}[q.type];
+  $('qtext').textContent=q.q;
+  const hint=$('qhint');
+  if(q.type==='multi'){hint.textContent=mode==='exam'?'Multiple answer — select ALL correct options.':'Múltipla resposta — marque TODAS as corretas. Deixar uma de fora zera a questão.';hint.classList.remove('hide');}
+  else{hint.classList.add('hide');}
+  const box=$('qopts'); box.innerHTML='';
+  if(q.type==='match'){
+    q.left.forEach((L,li)=>{
+      const opts=q.right.map(r=>`<option value="${r}"${answers[cur][li]===r?' selected':''}>${r}</option>`).join('');
+      const row=document.createElement('div'); row.className='matchrow';
+      row.innerHTML=`<span class="ml">${L}</span><select data-li="${li}"><option value="">— escolher —</option>${opts}</select>`;
+      box.appendChild(row);
+    });
+    box.querySelectorAll('select').forEach(s=>s.onchange=()=>{answers[cur][+s.dataset.li]=s.value;});
+  } else {
+    const isMulti=q.type==='multi';
+    const opts=q.type==='tf'?['True','False']:q.o;
+    opts.forEach((txt,oi)=>{
+      const sel=isMulti?answers[cur].includes(oi):answers[cur]===oi;
+      const el=document.createElement('div');
+      el.className='opt'+(sel?' sel':''); if(isMulti)el.setAttribute('data-multi','');
+      el.innerHTML=`<span class="box">${sel?'✓':''}</span><span class="otxt">${txt}</span>`;
+      el.onclick=()=>{
+        if(isMulti){const arr=answers[cur];const idx=arr.indexOf(oi);idx>=0?arr.splice(idx,1):arr.push(oi);}
+        else{answers[cur]=oi;}
+        renderQ();
+      };
+      box.appendChild(el);
+    });
+  }
+  $('prev').style.visibility=cur===0?'hidden':'visible';
+  $('next').textContent=cur===quiz.length-1?(mode==='exam'?'Finish':'Finalizar'):(mode==='exam'?'Next':'Próxima');
+}
+$('next').onclick=()=>{ if(cur<quiz.length-1){cur++;renderQ();window.scrollTo(0,0);} else finish(); };
+$('prev').onclick=()=>{ if(cur>0){cur--;renderQ();window.scrollTo(0,0);} };
+$('finishNow').onclick=()=>{ const msg=mode==='exam'?'End the exam now and see your result? Unanswered questions count as wrong.':'Finalizar agora e ver o resultado? As não respondidas contam como erradas.'; if(confirm(msg)) finish(); };
+
+/* ============================ CORREÇÃO ============================ */
+function isCorrect(q,ans){
+  if(q.type==='single'||q.type==='tf')return ans===q.a;
+  if(q.type==='multi'){if(!Array.isArray(ans))return false;const A=[...ans].sort().join(','),B=[...q.a].sort().join(',');return A===B&&ans.length>0;}
+  if(q.type==='match')return q.a.every((v,i)=>ans[i]===v);
+  return false;
+}
+function answerText(q,ans){
+  if(ans==null||(Array.isArray(ans)&&ans.length===0)||(q.type==='match'&&ans.every(x=>!x)))return '(sem resposta)';
+  if(q.type==='tf')return ['True','False'][ans];
+  if(q.type==='single')return q.o[ans];
+  if(q.type==='multi')return ans.slice().sort((a,b)=>a-b).map(i=>q.o[i]).join(' · ');
+  if(q.type==='match')return q.left.map((l,i)=>`${l}=${ans[i]||'?'}`).join(' · ');
+}
+function correctText(q){
+  if(q.type==='tf')return ['True','False'][q.a];
+  if(q.type==='single')return q.o[q.a];
+  if(q.type==='multi')return q.a.map(i=>q.o[i]).join(' · ');
+  if(q.type==='match')return q.left.map((l,i)=>`${l}=${q.a[i]}`).join(' · ');
+}
+
+function finish(){
+  clearInterval(timerInt);
+  const res=saveResult();
+  const {pct,correct,byTopic}=res;
+  let multiTotal=0, multiWrong=0;
+  quiz.forEach((q,i)=>{if(q.type==='multi'){multiTotal++; if(!isCorrect(q,answers[i]))multiWrong++;}});
+  const pass=pct>=60;
+  const secs=Math.floor((Date.now()-t0)/1000);
+  const time=`${String(Math.floor(secs/60)).padStart(2,'0')}:${String(secs%60).padStart(2,'0')}`;
+
+  let html=`<div class="panel score-card">
+    <div class="verdict ${pass?'pass':'fail'}">${pass?'▲ Acima da nota de corte':'▼ Abaixo da nota de corte'}</div>
+    <div class="big">${pct}<small>%</small></div>
+    <div class="subscore">${correct} de ${quiz.length} corretas · tempo ${time}</div>
+    <div class="passline">
+      <div class="track2"><div class="val" style="width:${pct}%;background:${pass?'linear-gradient(90deg,#0e8f86,#34d399)':'linear-gradient(90deg,#b3453a,#f87171)'}"></div><div class="mark"></div></div>
+      <div class="cap"><span>0%</span><span style="color:var(--warn)">corte 60%</span><span>100%</span></div>
+    </div>
+  </div>`;
+
+  // Breakdown por tema
+  const rows=Object.entries(byTopic).sort((a,b)=>(a[1].ok/a[1].n)-(b[1].ok/b[1].n)).map(([k,v])=>{
+    const p=Math.round(v.ok/v.n*100);
+    const col=p>=60?'linear-gradient(90deg,#0e8f86,#34d399)':'linear-gradient(90deg,#b3453a,#f87171)';
+    return `<div class="brk-row"><span class="bl">${TOPICS[k].n}</span><span class="bt"><span class="bf" style="width:${p}%;background:${col}"></span></span><span class="bn">${v.ok}/${v.n}</span></div>`;
+  }).join('');
+  html+=`<div class="panel"><p class="label">Desempenho por domínio</p>${rows}</div>`;
+
+  // Callouts de orientação
+  let cues='';
+  const weak=Object.entries(byTopic).filter(([k,v])=>v.ok/v.n<0.6).map(([k])=>TOPICS[k].n);
+  if(multiTotal>0&&multiWrong/multiTotal>=0.5){
+    cues+=`<div class="callout warn">⚠ <strong>Múltipla resposta:</strong> você errou ${multiWrong} de ${multiTotal}. Na prova Huawei não há pontuação parcial — trate cada alternativa como um V/F isolado e marque todas as verdadeiras.</div>`;
+  }
+  if(weak.length){
+    cues+=`<div class="callout warn" style="margin-top:10px">⚠ <strong>Reforçar:</strong> ${weak.join(', ')}. Priorize os de maior peso na prova (IP e Ethernet).</div>`;
+  }
+  if(pass&&!weak.length){
+    cues+=`<div class="callout good">✔ Desempenho consistente em todos os domínios testados. Mantenha o ritmo e aumente o número de questões por sessão.</div>`;
+  }
+  if(cues)html+=`<div class="panel">${cues}</div>`;
+
+  // Revisão
+  let rev=`<div class="review"><h3>Revisão questão a questão</h3>`;
+  quiz.forEach((q,i)=>{
+    const ok=isCorrect(q,answers[i]);
+    rev+=`<div class="ritem ${ok?'ok':'no'}">
+      <span class="rtag">${TOPICS[q.t].n}</span>
+      <div class="rq">${i+1}. ${q.q}</div>
+      <div class="line"><span class="k">Sua resposta: </span><span class="yours ${ok?'':'no'}">${answerText(q,answers[i])}</span></div>
+      ${ok?'':`<div class="line"><span class="k">Correta: </span><span class="correct">${correctText(q)}</span></div>`}
+      <div class="exp">${q.e}</div>
+    </div>`;
+  });
+  rev+=`</div>`;
+  html+=rev;
+
+  html+=`<div class="footer">
+    <button class="btn-primary" id="again">Novo simulado</button>
+    <button class="btn-ghost" id="retry">Refazer estas questões</button>
+  </div>
+  <p class="tiny">Banco validado manualmente · para WLAN, IPv6 e SDN, complemente com a documentação oficial da Huawei.</p>`;
+
+  const R=$('report'); R.innerHTML=html; R.classList.remove('hide'); $('quiz').classList.add('hide'); window.scrollTo(0,0);
+  $('again').onclick=()=>{$('report').classList.add('hide');$('setup').classList.remove('hide');window.scrollTo(0,0);};
+  $('retry').onclick=()=>{answers=quiz.map(q=>q.type==='multi'?[]:(q.type==='match'?q.left.map(()=>''):null));cur=0;$('report').classList.add('hide');$('quiz').classList.remove('hide');startTimer();renderQ();window.scrollTo(0,0);};
+}
+
+function saveResult(){const byTopic={};let correct=0;quiz.forEach((q,i)=>{const ok=isCorrect(q,answers[i]);if(ok)correct++;(byTopic[q.t]=byTopic[q.t]||{ok:0,n:0}).n++;if(ok)byTopic[q.t].ok++;});const pct=Math.round(correct/quiz.length*100);const secs=Math.floor((Date.now()-t0)/1000);const result={id:Date.now(),date:new Date().toLocaleString(),mode:mode,totalQuestions:quiz.length,correctAnswers:correct,score:pct,timeSeconds:secs,topics:byTopic};let hist=JSON.parse(localStorage.getItem('ospfHist')||'{"sessions":[]}');hist.sessions.push(result);localStorage.setItem('ospfHist',JSON.stringify(hist));return{pct,correct,byTopic};}
+function getHistory(){return JSON.parse(localStorage.getItem('ospfHist')||'{"sessions":[]}');}
+function renderHistory(){const hist=getHistory();if(hist.sessions.length===0){$('history').innerHTML='<div class="panel"><p style="color:var(--faint);text-align:center">Nenhuma sessao. Faca um simulado!</p></div>';return;}const sessions=hist.sessions;const avgScore=Math.round(sessions.reduce((s,x)=>s+x.score,0)/sessions.length);const totalQs=sessions.reduce((s,x)=>s+x.totalQuestions,0);const totalCorrect=sessions.reduce((s,x)=>s+x.correctAnswers,0);const allTopics={};sessions.forEach(s=>Object.keys(s.topics).forEach(t=>{if(!allTopics[t])allTopics[t]={ok:0,n:0};allTopics[t].ok+=s.topics[t].ok;allTopics[t].n+=s.topics[t].n;}));const topicsByPct=Object.entries(allTopics).map(([k,v])=>({name:TOPICS[k].n,pct:Math.round(v.ok/v.n*100),ok:v.ok,n:v.n})).sort((a,b)=>a.pct-b.pct);let statsHtml=`<div class="hist-stat"><div class="hist-card"><div class="label">Media</div><div class="val">${avgScore}%</div></div><div class="hist-card"><div class="label">Corretas</div><div class="val">${totalCorrect}/${totalQs}</div></div><div class="hist-card"><div class="label">Sessoes</div><div class="val">${sessions.length}</div></div></div><p class="label">Desempenho (piores primeiro)</p>`;topicsByPct.slice(0,5).forEach(tp=>{statsHtml+=`<div class="hist-topic-row"><span class="hist-topic-name">${tp.name}</span><div class="hist-topic-bar"><div class="fill" style="width:${tp.pct}%"></div></div><span class="hist-topic-pct">${tp.pct}%</span></div>`;});$('historyStats').innerHTML=statsHtml;let tableHtml=`<table class="hist-table"><thead><tr><th>Data</th><th>Modo</th><th>Qs</th><th>Corretas</th><th>Nota</th></tr></thead><tbody>`;sessions.slice().reverse().forEach(s=>{tableHtml+=`<tr><td style="font-size:12px">${s.date}</td><td>${s.mode==='exam'?'Prova':'Treino'}</td><td>${s.totalQuestions}</td><td>${s.correctAnswers}</td><td class="hist-row-score ${s.score>=60?'pass':'fail'}">${s.score}%</td></tr>`;});tableHtml+=`</tbody></table>`;$('historyTable').innerHTML=tableHtml;}
+$('viewHistory').onclick=()=>{$('setup').classList.add('hide');$('history').classList.remove('hide');renderHistory();window.scrollTo(0,0);};
+$('backFromHistory').onclick=()=>{$('history').classList.add('hide');$('setup').classList.remove('hide');window.scrollTo(0,0);};
+$('clearHistory').onclick=()=>{if(confirm('Limpar historico?')){localStorage.removeItem('ospfHist');renderHistory();}};
+$('clearLesson').onclick=()=>{selLessonId=null;document.querySelectorAll('.lesson-item').forEach(i=>i.classList.remove('selected'));};
+
+function renderLesson(){
+  let html='';
+  Object.entries(LESSONS).forEach(([n,name])=>{
+    const numQ=BANK.filter(q=>q.lesson==parseInt(n)).length;
+    html+=`<div class="lesson-item" data-lesson="${n}"><span class="num">${n}.</span>${name}<span class="lesson-badge">${numQ}q</span></div>`;
+  });
+  $('lessonList').innerHTML=html;
+  document.querySelectorAll('.lesson-item').forEach(item=>{
+    item.onclick=()=>selLesson(item.dataset.lesson);
+  });
+}
+let selLessonId=null;
+function selLesson(lid){
+  selLessonId=parseInt(lid);
+  document.querySelectorAll('.lesson-item').forEach(i=>i.classList.toggle('selected', i.dataset.lesson==lid));
+}
+/* init */
+renderCounts(); renderChips(); updateAvail();
+</script>
+</body>
+</html>
